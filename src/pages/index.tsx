@@ -1,20 +1,12 @@
 import { Expander, ExpanderItem } from '@aws-amplify/ui-react';
-import { useState, useEffect } from 'react';
-export default function Home() {
 
-    const [posts, setPosts] = useState([])
-    const [isLoading, setLoading] = useState(true);
+export async function getStaticProps() {
+    const resp = await fetch(`${process.env.BASE_URL}/api/posts`)
+    const posts = await resp.json();
+    return { props: { posts } };
+}
 
-    useEffect(() => {
-        fetch('/api/posts')
-            .then((res) => res.json())
-            .then((data) => {
-                setPosts(data);
-                setLoading(false);
-            });
-    });
-
-    if (isLoading) return (<h1>loading.... </h1>);
+export default function Home({ posts }: any) {
 
     const frags = posts.map(({ userId, body, title }: any, i: number) => (
         <ExpanderItem value={userId} key={i} title={title}>
