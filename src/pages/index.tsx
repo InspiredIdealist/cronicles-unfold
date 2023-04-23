@@ -1,12 +1,20 @@
 import { Expander, ExpanderItem } from '@aws-amplify/ui-react';
+import { useState, useEffect } from 'react';
+export default function Home() {
 
-export async function getStaticProps() {
-    const posts = await fetch('https://jsonplaceholder.typicode.com/posts');
-    const data = await posts.json();
-    return { props: { posts: data } };
-}
+    const [posts, setPosts] = useState([])
+    const [isLoading, setLoading] = useState(true);
 
-export default function Home({ posts }: any) {
+    useEffect(() => {
+        fetch('/api/posts')
+            .then((res) => res.json())
+            .then((data) => {
+                setPosts(data);
+                setLoading(false);
+            });
+    });
+
+    if (isLoading) return (<h1>loading.... </h1>);
 
     const frags = posts.map(({ userId, body, title }: any, i: number) => (
         <ExpanderItem value={userId} key={i} title={title}>
