@@ -1,10 +1,16 @@
 import { Expander, ExpanderItem } from '@aws-amplify/ui-react';
 
-export default function Home() {
+export async function getStaticProps() {
+    const posts = await fetch('https://jsonplaceholder.typicode.com/posts');
+    const data = await posts.json();
+    return { props: { posts: data } };
+}
 
-    const frags = Array(100).fill(0).map((_, i) => (
-        <ExpanderItem value={i.toString()} key={i} title={`NUMBA ${i}`}>
-            {i}
+export default function Home({ posts }: any) {
+
+    const frags = posts.map(({ userId, body, title }: any, i: number) => (
+        <ExpanderItem value={userId} key={i} title={title}>
+            {body}
         </ExpanderItem>
     ));
 
