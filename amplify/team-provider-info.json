@@ -1,0 +1,23 @@
+{
+  "staging": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-croniclesunfold-staging-135545-authRole",
+      "UnauthRoleArn": "arn:aws:iam::363817126280:role/amplify-croniclesunfold-staging-135545-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::363817126280:role/amplify-croniclesunfold-staging-135545-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-croniclesunfold-staging-135545-deployment",
+      "UnauthRoleName": "amplify-croniclesunfold-staging-135545-unauthRole",
+      "StackName": "amplify-croniclesunfold-staging-135545",
+      "StackId": "arn:aws:cloudformation:us-east-1:363817126280:stack/amplify-croniclesunfold-staging-135545/386de690-db95-11ed-bdfa-0ede2622022f",
+      "AmplifyAppId": "d3373bn0d7kwtk"
+    },
+    "categories": {
+      "auth": {
+        "CroniclesUnfold": {}
+      },
+      "storage": {
+        "s3croniclesunfoldstoragefe3d22f0": {}
+      }
+    }
+  }
+}

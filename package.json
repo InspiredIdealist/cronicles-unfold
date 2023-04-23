@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "build:tailwind": "tailwindcss build -i src/styles/globals.css -o src/styles-generated/tailwind.css"
   },
   "dependencies": {
     "@types/node": "18.16.0",
@@ -20,6 +21,8 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "tailwindcss": "3.3.1",
-    "typescript": "5.0.4"
+    "typescript": "5.0.4",
+    "@aws-amplify/ui-react": "^4.0.1",
+    "aws-amplify": "^5.0.2"
   }
 }

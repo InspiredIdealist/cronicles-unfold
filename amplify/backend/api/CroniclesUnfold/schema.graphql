@@ -1,0 +1,37 @@
+type Character @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  name: String
+  authorID: ID! @index(name: "byAuthor")
+  storys: [Story] @manyToMany(relationName: "StoryCharacter")
+  storyfragments: [StoryFragment] @manyToMany(relationName: "StoryFragmentCharacter")
+}
+
+type Author @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  name: String!
+  StoryFragments: [StoryFragment] @hasMany(indexName: "byAuthor", fields: ["id"])
+  Characters: [Character] @hasMany(indexName: "byAuthor", fields: ["id"])
+}
+
+type StoryFragment @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  storyID: ID! @index(name: "byStory")
+  prompt: String
+  fragment: String!
+  prevId: String
+  createdAt: AWSDateTime!
+  authorID: ID! @index(name: "byAuthor")
+  Characters: [Character] @manyToMany(relationName: "StoryFragmentCharacter")
+}
+
+type Story @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  currentMessageId: String!
+  storyRootId: String!
+  StoryFragments: [StoryFragment] @hasMany(indexName: "byStory", fields: ["id"])
+  prevStoryId: String
+  createdAt: AWSDateTime!
+  lastAddedToAt: AWSDateTime!
+  Author: Author! @hasOne
+  Characters: [Character] @manyToMany(relationName: "StoryCharacter")
+}

@@ -1,0 +1,12 @@
+{
+  "resourceName": "s3croniclesunfoldstoragefe3d22f0",
+  "bucketName": "croniclesunfold-storage-fe3d22f0",
+  "policyUUID": "31c8a92e",
+  "storageAccess": "auth",
+  "guestAccess": [],
+  "authAccess": [
+    "READ",
+    "CREATE_AND_UPDATE",
+    "DELETE"
+  ]
+}
