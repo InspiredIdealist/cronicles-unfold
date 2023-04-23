@@ -1,16 +1,29 @@
 import { Button, Divider, Expander, ExpanderItem, FieldGroupIcon, Flex, TextField, View } from '@aws-amplify/ui-react';
-import { getPosts } from './api/posts';
+import { API } from 'aws-amplify';
+import { listStoryFragments } from '@/graphql/queries';
+import { GraphQLQuery } from '@aws-amplify/api';
+import { Character, CreateStoryFragmentInput, CreateStoryFragmentMutation, ListStoryFragmentsQuery, StoryFragment } from '@/api/graphql';
+import { useState } from 'react';
+import { createStoryFragment } from '@/graphql/mutations';
 
-export async function getStaticProps() {
-    const posts = await getPosts();
-    return { props: { posts } };
+export async function getStaticProps(context: any) {
+    const posts = await API.graphql<GraphQLQuery<ListStoryFragmentsQuery>>({ query: listStoryFragments });
+    return {
+        props: {
+            authorID: "c6a6d403-032e-4584-9276-769108738cfa", // Luke!
+            storyID: "1",
+            fragments: posts.data?.listStoryFragments?.items
+        }
+    };
 }
 
-export default function Home({ posts }: any) {
+export default function Home({ authorID, storyID, fragments }: any) {
 
-    const frags = posts.map(({ userId, body, title }: any, i: number) => (
-        <ExpanderItem value={userId} key={i} title={title}>
-            {body}
+    const [prompt, setPrompt] = useState<string>("");
+
+    const frags = fragments.map(({ id, fragment, authorID, prompt }: StoryFragment) => (
+        <ExpanderItem value={authorID} key={id} title={fragment}>
+            {prompt}
         </ExpanderItem>
     ));
 
@@ -36,6 +49,8 @@ export default function Home({ posts }: any) {
                 >
                     <TextField
                         label=""
+                        value={prompt}
+                        onChange={e => setPrompt(e.target.value)}
                         type="text"
                         labelHidden={true}
                         placeholder="what happened next?"
@@ -45,7 +60,21 @@ export default function Home({ posts }: any) {
                             </FieldGroupIcon>
                         }
                         outerEndComponent={
-                            <Button onClick={() => { }}>Send</Button>
+                            <Button onClick={async () => {
+                                console.log("button clicked!!!");
+                                await API.graphql<GraphQLQuery<CreateStoryFragmentInput>>({
+                                    query: createStoryFragment,
+                                    variables: {
+                                        input: {
+                                            prompt,
+                                            authorID,
+                                            storyID,
+                                            fragment: "thinking..."
+                                        }
+                                    }
+                                })
+                                setPrompt("");
+                            }}>Send</Button>
                         }
                     />
                 </View>
