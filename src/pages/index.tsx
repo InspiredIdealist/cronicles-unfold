@@ -1,8 +1,8 @@
 import { Expander, ExpanderItem } from '@aws-amplify/ui-react';
+import { getPosts } from './api/posts';
 
 export async function getStaticProps() {
-    const resp = await fetch(`${process.env.BASE_URL}/api/posts`)
-    const posts = await resp.json();
+    const posts = await getPosts();
     return { props: { posts } };
 }
 

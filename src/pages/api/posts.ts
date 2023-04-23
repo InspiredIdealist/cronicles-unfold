@@ -6,10 +6,15 @@ type Data = {
 }
 
 export default async function handler(
-    req: NextApiRequest,
+    _: NextApiRequest,
     res: NextApiResponse<Data>
 ) {
+    const posts = await getPosts();
+    res.status(200).json(posts);
+}
+
+export async function getPosts() {
     const posts = await fetch('https://jsonplaceholder.typicode.com/posts');
     const postsJson = await posts.json();
-    res.status(200).json(postsJson);
+    return postsJson;
 }
