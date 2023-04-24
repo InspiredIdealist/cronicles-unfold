@@ -213,6 +213,7 @@ export const getStory = /* GraphQL */ `
       Characters {
         nextToken
       }
+      name
       updatedAt
       storyAuthorId
     }
@@ -232,6 +233,7 @@ export const listStories = /* GraphQL */ `
         prevStoryId
         createdAt
         lastAddedToAt
+        name
         updatedAt
         storyAuthorId
       }
@@ -259,6 +261,7 @@ export const getStoryCharacter = /* GraphQL */ `
         prevStoryId
         createdAt
         lastAddedToAt
+        name
         updatedAt
         storyAuthorId
       }

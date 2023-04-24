@@ -1,41 +1,46 @@
-import { Button, Divider, Expander, ExpanderItem, FieldGroupIcon, Flex, TextField, View } from '@aws-amplify/ui-react';
+import { Button, Divider, Expander, ExpanderItem, FieldGroupIcon, Flex, Heading, TextField, View } from '@aws-amplify/ui-react';
 import { API } from 'aws-amplify';
 import { GraphQLQuery } from '@aws-amplify/api';
-import { CreateStoryFragmentInput, GetStoryQuery, ListStoryFragmentsQuery } from '@/api/graphql';
-import { useState } from 'react';
+import { CreateStoryFragmentInput, GetStoryQuery, ListStoryFragmentsQuery, ModelStoryFilterInput, StoryFragment } from '@/api/graphql';
+import { useEffect, useState } from 'react';
 import { createStoryFragment } from '@/graphql/mutations';
-import { getStory } from '@/graphql/queries';
-import { listStoryFragments } from '@/graphql/queries';
 import { useRouter } from 'next/router';
+import { Story } from '@/models';
+import { getStory, listStoryFragments } from '@/graphql/queries';
 
 export default function Storyline() {
     const router = useRouter();
-    const id: string | string[] = router.query.id!;
-
-    const story = await API.graphql<GraphQLQuery<GetStoryQuery>>({
-        query: getStory,
-        variables: { id: id.toString() }
-    }).then(s => s.data?.getStory);
-
-    const fragments = await API.graphql<GraphQLQuery<ListStoryFragmentsQuery>>({
-        query: listStoryFragments,
-        variables: {
-            filter: { id }
-        }
-    }).then(f => f.data?.listStoryFragments?.items);
-
+    const id: any = router.query.id;
+    const [story, setStory] = useState<any>();
+    const [fragments, setFragments] = useState<any[]>([]);
     const [prompt, setPrompt] = useState<string>("");
 
-    const frags = fragments!.map((frag) => (
-        <ExpanderItem value={frag!.authorID} key={frag!.id} title={frag!.fragment}>
-            {frag!.prompt}
+    useEffect(() => {
+        if (id)
+            API.graphql<GraphQLQuery<GetStoryQuery>>({ query: getStory, variables: { id } })
+                .then(s => s.data?.getStory)
+                .then(s => {
+                    setStory(s as any);
+                    console.log("story with ID: " + id + ":: " + JSON.stringify(s));
+                    API.graphql<GraphQLQuery<ListStoryFragmentsQuery>>({
+                        query: listStoryFragments,
+                        variables: { filter: { storyID: { eq: id } } }
+                    })
+                        .then(f => f.data?.listStoryFragments?.items)
+                        .then(f => setFragments(f as any[]))
+                });
+    }, [id]);
+
+    const frags = fragments?.map((frag) => (
+        <ExpanderItem value={frag?.authorID} key={frag?.id} title={frag?.fragment}>
+            {frag?.prompt}
         </ExpanderItem>
     ));
 
     return (
         <>
             <Flex direction="column" gap="8rem">
-                <h1>{story?.id}</h1>
+                <Heading style={{ textAlign: "center" }} level={1}>{story?.name}</Heading>
                 <Divider orientation='horizontal' />
                 <div>
                     <Expander type="multiple">
@@ -73,17 +78,13 @@ export default function Storyline() {
                                     variables: {
                                         input: {
                                             prompt,
-                                            authorID,
-                                            storyID,
+                                            authorID: story?.storyAuthorId,
+                                            storyID: story?.id,
                                             fragment: "thinking..."
                                         }
                                     }
                                 })
                                 setPrompt("");
-                                setStoryFragments(prev => {
-                                    prev.push(
-                                })
-
 
                             }}>Send</Button>
                         }
@@ -92,5 +93,4 @@ export default function Storyline() {
             </Flex>
         </>
     );
-}xport default function Story() {
 }

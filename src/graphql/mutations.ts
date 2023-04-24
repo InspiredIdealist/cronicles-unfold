@@ -203,6 +203,7 @@ export const createStory = /* GraphQL */ `
       Characters {
         nextToken
       }
+      name
       updatedAt
       storyAuthorId
     }
@@ -232,6 +233,7 @@ export const updateStory = /* GraphQL */ `
       Characters {
         nextToken
       }
+      name
       updatedAt
       storyAuthorId
     }
@@ -261,6 +263,7 @@ export const deleteStory = /* GraphQL */ `
       Characters {
         nextToken
       }
+      name
       updatedAt
       storyAuthorId
     }
@@ -289,6 +292,7 @@ export const createStoryCharacter = /* GraphQL */ `
         prevStoryId
         createdAt
         lastAddedToAt
+        name
         updatedAt
         storyAuthorId
       }
@@ -320,6 +324,7 @@ export const updateStoryCharacter = /* GraphQL */ `
         prevStoryId
         createdAt
         lastAddedToAt
+        name
         updatedAt
         storyAuthorId
       }
@@ -351,6 +356,7 @@ export const deleteStoryCharacter = /* GraphQL */ `
         prevStoryId
         createdAt
         lastAddedToAt
+        name
         updatedAt
         storyAuthorId
       }

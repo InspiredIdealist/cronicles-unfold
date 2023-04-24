@@ -1,4 +1,4 @@
-
+import Stories from './stories';
 export default function Home() {
-    return (<h1>HAI</h1>);
+    return Stories();
 }
