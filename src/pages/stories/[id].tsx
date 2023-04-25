@@ -1,16 +1,16 @@
 import { Button, Divider, Expander, ExpanderItem, FieldGroupIcon, Flex, Heading, TextField, View } from '@aws-amplify/ui-react';
 import { API } from 'aws-amplify';
 import { GraphQLQuery } from '@aws-amplify/api';
-import { CreateStoryFragmentInput, GetStoryQuery, ListStoryFragmentsQuery, ModelStoryFilterInput, StoryFragment } from '@/api/graphql';
+import { GetStoryQuery, ListStoryFragmentsQuery } from '@/api/graphql';
 import { useEffect, useState } from 'react';
-import { createStoryFragment } from '@/graphql/mutations';
 import { useRouter } from 'next/router';
-import { Story } from '@/models';
 import { getStory, listStoryFragments } from '@/graphql/queries';
+import { tellATale } from '../api/bot';
 
 export default function Storyline() {
     const router = useRouter();
     const id: any = router.query.id;
+    const character: any = router.query.character;
     const [story, setStory] = useState<any>();
     const [fragments, setFragments] = useState<any[]>([]);
     const [prompt, setPrompt] = useState<string>("");
@@ -21,7 +21,6 @@ export default function Storyline() {
                 .then(s => s.data?.getStory)
                 .then(s => {
                     setStory(s as any);
-                    console.log("story with ID: " + id + ":: " + JSON.stringify(s));
                     API.graphql<GraphQLQuery<ListStoryFragmentsQuery>>({
                         query: listStoryFragments,
                         variables: { filter: { storyID: { eq: id } } }
@@ -31,9 +30,10 @@ export default function Storyline() {
                 });
     }, [id]);
 
-    const frags = fragments?.map((frag) => (
+    const frags = fragments?.sort((a, b) => a.createdAt > b.createdAt ? 1 : -1).map((frag) => (
         <ExpanderItem value={frag?.authorID} key={frag?.id} title={frag?.fragment}>
-            {frag?.prompt}
+            <p>{frag?.prompt}</p>
+            <p>{frag?.createdAt}</p>
         </ExpanderItem>
     ));
 
@@ -73,19 +73,9 @@ export default function Storyline() {
                         }
                         outerEndComponent={
                             <Button onClick={async () => {
-                                await API.graphql<GraphQLQuery<CreateStoryFragmentInput>>({
-                                    query: createStoryFragment,
-                                    variables: {
-                                        input: {
-                                            prompt,
-                                            authorID: story?.storyAuthorId,
-                                            storyID: story?.id,
-                                            fragment: "thinking..."
-                                        }
-                                    }
-                                })
+                                const newFrag = await tellATale(story, prompt, character, story.characters);
+                                setFragments(prev => prev.concat([newFrag]));
                                 setPrompt("");
-
                             }}>Send</Button>
                         }
                     />

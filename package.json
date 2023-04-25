@@ -23,6 +23,7 @@
     "tailwindcss": "3.3.1",
     "typescript": "5.0.4",
     "@aws-amplify/ui-react": "^4.0.1",
-    "aws-amplify": "^5.0.2"
+    "aws-amplify": "^5.0.2",
+    "chatgpt": "5.2.2" 
   }
 }

@@ -7,7 +7,16 @@ import { API } from 'aws-amplify';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
-export default function Stories() {
+export async function getServerSideProps(context: any) {
+
+    const character = context.query.character;
+
+    return {
+        props: { character }
+    };
+}
+
+export default function Stories({ character }: any) {
 
     const router = useRouter();
     const [stories, setStories] = useState<any[]>();
@@ -25,7 +34,7 @@ export default function Stories() {
                 name={s.name}
                 count={"just me"}
                 description={"put something here"}
-                onClick={() => router.push(`/stories/${s.id}`)}
+                onClick={() => router.push(`/stories/${s.id}?${character}`)}
             />
         )
     });
