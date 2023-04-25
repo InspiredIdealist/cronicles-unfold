@@ -59,26 +59,30 @@ export default function Storyline() {
                     maxWidth="100%"
                     padding="1rem"
                 >
-                    <TextField
-                        label=""
-                        value={prompt}
-                        onChange={e => setPrompt(e.target.value)}
-                        type="text"
-                        labelHidden={true}
-                        placeholder="what happened next?"
-                        innerStartComponent={
-                            <FieldGroupIcon>
-                                📇
-                            </FieldGroupIcon>
-                        }
-                        outerEndComponent={
-                            <Button onClick={async () => {
-                                const newFrag = await tellATale(story, prompt, character, story.characters);
-                                setFragments(prev => prev.concat([newFrag]));
-                                setPrompt("");
-                            }}>Send</Button>
-                        }
-                    />
+                    <form onSubmit={async (e) => {
+                        e.preventDefault();
+                        const newFrag = await tellATale(story, prompt, character, story.characters);
+                        setFragments(prev => prev.concat([newFrag]));
+                        setPrompt("");
+
+                    }}>
+                        <TextField
+                            label=""
+                            value={prompt}
+                            onChange={e => setPrompt(e.target.value)}
+                            type="text"
+                            labelHidden={true}
+                            placeholder="what happened next?"
+                            innerStartComponent={
+                                <FieldGroupIcon>
+                                    📇
+                                </FieldGroupIcon>
+                            }
+                            outerEndComponent={
+                                <Button type="submit">Send</Button>
+                            }
+                        />
+                    </form>
                 </View>
             </Flex>
         </>

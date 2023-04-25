@@ -50,7 +50,8 @@ export async function tellATale(story: any, hint: string, character: string, cha
 
     //const fragment = await ask(hint, story.messageId, character, characters);
 
-    const fragment = "testing";
+    // TODO replace with actual chatbot response
+    const fragment = hint;
 
     const resp = await API.graphql<GraphQLQuery<CreateStoryFragmentInput>>({
         query: createStoryFragment,
