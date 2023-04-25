@@ -4,6 +4,7 @@
  * Any changes to this file will be overwritten when running amplify pull. *
  **************************************************************************/
 
+export { default as StoryCard } from "./StoryCard";
 export { default as FeaturesText2x2 } from "./FeaturesText2x2";
 export { default as FormCheckout } from "./FormCheckout";
 export { default as HeroLayout4 } from "./HeroLayout4";
