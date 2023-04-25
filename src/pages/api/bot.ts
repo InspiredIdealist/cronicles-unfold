@@ -65,5 +65,5 @@ export async function tellATale(story: any, hint: string, character: string, cha
         }
     })
 
-    return resp.data.createStoryFragment;
+    return (resp.data as any)?.createStoryFragment;
 }
