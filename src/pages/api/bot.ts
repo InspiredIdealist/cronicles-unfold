@@ -1,4 +1,3 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { CreateStoryFragmentInput } from '@/api/graphql';
 import { createStoryFragment } from '@/graphql/mutations';
 import { GraphQLQuery } from '@aws-amplify/api';
@@ -32,38 +31,39 @@ export async function getPosts() {
     return postsJson;
 }
 
-export async function ask(hint: string, messageId: string, character: string, characters: string[]): Promise<string> {
+export async function ask(hint: string, character: string, characters: string[], messageId?: string | null) {
 
-    const api = new ChatGPTAPI({
-        apiKey: process.env["OPENAI_API_KEY"]!
-    });
+    //const api = new ChatGPTAPI({
+    //    apiKey: process.env["OPENAI_API_KEY"]!
+    //});
 
-    const resp = await api.sendMessage(hint, {
-        systemMessage: metaPromptFor(character, characters),
-        parentMessageId: messageId
-    });
+    //const resp = await api.sendMessage(hint, {
+    //    systemMessage: metaPromptFor(character, characters),
+    //    parentMessageId: messageId
+    //});
 
-    return resp.text;
+    //return resp.text;
+
+    return { fragment: hint, nextMessageId: (Math.random() * 100000).toString() };
 }
 
 export async function tellATale(story: any, hint: string, character: string, characters: string[]) {
 
-    //const fragment = await ask(hint, story.messageId, character, characters);
+    const { fragment, nextMessageId } = await ask(hint, character, characters, story.messageId);
 
-    // TODO replace with actual chatbot response
-    const fragment = hint;
-
-    const resp = await API.graphql<GraphQLQuery<CreateStoryFragmentInput>>({
+    const resp = API.graphql<GraphQLQuery<CreateStoryFragmentInput>>({
         query: createStoryFragment,
         variables: {
             input: {
                 prompt: hint,
                 authorID: story?.storyAuthorId,
                 storyID: story?.id,
-                fragment
+                fragment,
             }
         }
     })
 
-    return (resp.data as any)?.createStoryFragment;
+    resp.catch(err => console.error(err));
+
+    return ((await resp).data as any)?.createStoryFragment;
 }
