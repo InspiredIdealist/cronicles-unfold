@@ -1,5 +1,5 @@
-import { ListStoriesQuery } from '@/api/graphql';
-import { listStories } from '@/graphql/queries';
+import { GetCharacterQuery, ListStoriesQuery } from '@/api/graphql';
+import { getCharacter, listStories } from '@/graphql/queries';
 import StoryCard from '@/ui-components/StoryCard';
 import { GraphQLQuery } from '@aws-amplify/api';
 import { Flex } from '@aws-amplify/ui-react';
@@ -9,7 +9,12 @@ import { useEffect, useState } from 'react';
 
 export async function getServerSideProps(context: any) {
 
-    const character = context.query.character;
+    const id = context.query.characterId;
+
+    const character = await API.graphql<GraphQLQuery<GetCharacterQuery>>({
+        query: getCharacter,
+        variables: { id }
+    });
 
     return {
         props: { character }
@@ -34,7 +39,7 @@ export default function Stories({ character }: any) {
                 name={s.name}
                 count={"just me"}
                 description={"put something here"}
-                onClick={() => router.push(`/stories/${s.id}?${character}`)}
+                onClick={() => router.push(`/stories/${s.id}?character=${character.name}`)}
             />
         )
     });

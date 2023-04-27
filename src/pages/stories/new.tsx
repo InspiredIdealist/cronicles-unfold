@@ -1,11 +1,10 @@
-import { Author, CreateStoryFragmentMutation, CreateStoryInput, CreateStoryMutation, GetAuthorQuery } from "@/api/graphql";
+import { CreateStoryFragmentMutation, CreateStoryMutation, GetAuthorQuery } from "@/api/graphql";
 import { createStory, createStoryFragment } from "@/graphql/mutations";
 import { GraphQLQuery } from "@aws-amplify/api";
 import { Button, TextField } from "@aws-amplify/ui-react";
 import { API } from "aws-amplify";
 import { useState } from "react";
 import { ask } from "../api/bot";
-import { redirect } from "next/navigation";
 import { getAuthor } from "@/graphql/queries";
 import { useRouter } from "next/router";
 

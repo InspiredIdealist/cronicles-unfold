@@ -7,6 +7,7 @@
 import * as React from "react";
 import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
 import { ButtonProps, FlexProps, ImageProps, TextProps } from "@aws-amplify/ui-react";
+import { SyntheticEvent } from "react";
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type HeroLayout1OverridesProps = {
     HeroLayout1?: PrimitiveOverrideProps<FlexProps>;
@@ -21,6 +22,11 @@ export declare type HeroLayout1OverridesProps = {
     image?: PrimitiveOverrideProps<ImageProps>;
 } & EscapeHatchProps;
 export declare type HeroLayout1Props = React.PropsWithChildren<Partial<FlexProps> & {
+    name?: String;
+    about?: String;
+    onSelect?: (event: SyntheticEvent) => void;
+    imageSrc?: String;
+} & {
     mode?: "Dark" | "Light";
 } & {
     overrides?: HeroLayout1OverridesProps | undefined | null;
