@@ -1,16 +1,39 @@
 import { Button, Divider, Expander, ExpanderItem, FieldGroupIcon, Flex, Heading, TextField, View } from '@aws-amplify/ui-react';
-import { API } from 'aws-amplify';
+import { API, withSSRContext } from 'aws-amplify';
 import { GraphQLQuery } from '@aws-amplify/api';
-import { GetStoryQuery, ListStoryFragmentsQuery } from '@/api/graphql';
+import { GetCharacterQuery, GetStoryQuery, ListStoryFragmentsQuery } from '@/api/graphql';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { getStory, listStoryFragments } from '@/graphql/queries';
+import { getCharacter, getStory, listStoryFragments } from '@/graphql/queries';
 import { tellATale } from '../api/bot';
 
-export default function Storyline() {
+
+export async function getServerSideProps({ req }: any) {
+
+    const { Auth } = withSSRContext({ req });
+    const user = await Auth.currentAuthenticatedUser();
+    const character = await API.graphql<GraphQLQuery<GetCharacterQuery>>({
+        query: getCharacter,
+        variables: { id: user.attributes.sub }
+    });
+
+    if (!character.data?.getCharacter) {
+        return {
+            redirect: {
+                destination: "/characters/new"
+            }
+        };
+    }
+
+    return {
+        props: { character: character.data?.getCharacter }
+    };
+}
+
+
+export default function Storyline({ character }: any) {
     const router = useRouter();
     const id: any = router.query.id;
-    const character: any = router.query.character;
     const [story, setStory] = useState<any>();
     const [fragments, setFragments] = useState<any[]>([]);
     const [prompt, setPrompt] = useState<string>("");
@@ -72,7 +95,7 @@ export default function Storyline() {
                             onChange={e => setPrompt(e.target.value)}
                             type="text"
                             labelHidden={true}
-                            placeholder="what happened next?"
+                            placeholder={`so ${character.name}, what happened next?`}
                             innerStartComponent={
                                 <FieldGroupIcon>
                                     📇
