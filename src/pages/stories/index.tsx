@@ -1,5 +1,5 @@
-import { GetCharacterQuery, ListStoriesQuery } from '@/api/graphql';
-import { getCharacter, listStories } from '@/graphql/queries';
+import { GetCharacterQuery, ListCharactersQuery, ListStoriesQuery, ModelCharacterFilterInput } from '@/api/graphql';
+import { getCharacter, listCharacters, listStories } from '@/graphql/queries';
 import StoryCard from '@/ui-components/StoryCard';
 import { GraphQLQuery } from '@aws-amplify/api';
 import { Flex } from '@aws-amplify/ui-react';
@@ -11,12 +11,12 @@ export async function getServerSideProps({ req }: any) {
 
     const { Auth } = withSSRContext({ req });
     const user = await Auth.currentAuthenticatedUser();
-    const character = await API.graphql<GraphQLQuery<GetCharacterQuery>>({
-        query: getCharacter,
-        variables: { id: user.attributes.sub }
+    const character = await API.graphql<GraphQLQuery<ListCharactersQuery>>({
+        query: listCharacters,
+        variables: { authorID: user.attributes.sub } as ModelCharacterFilterInput
     });
 
-    if (!character.data?.getCharacter) {
+    if (!character.data?.listCharacters?.items) {
         return {
             redirect: {
                 destination: "/characters/new"
@@ -25,7 +25,8 @@ export async function getServerSideProps({ req }: any) {
     }
 
     return {
-        props: { character }
+        // TODO: handle multiple characters
+        props: { character: character.data!.listCharacters!.items[0] }
     };
 }
 

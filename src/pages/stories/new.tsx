@@ -1,25 +1,23 @@
-import { CreateStoryFragmentMutation, CreateStoryMutation, GetAuthorQuery } from "@/api/graphql";
+import { CreateStoryFragmentInput, CreateStoryFragmentMutation, CreateStoryInput, CreateStoryMutation, GetAuthorQuery } from "@/api/graphql";
 import { createStory, createStoryFragment } from "@/graphql/mutations";
 import { GraphQLQuery } from "@aws-amplify/api";
 import { Button, TextField } from "@aws-amplify/ui-react";
-import { API } from "aws-amplify";
+import { API, withSSRContext } from "aws-amplify";
 import { useState } from "react";
 import { ask } from "../api/bot";
-import { getAuthor } from "@/graphql/queries";
 import { useRouter } from "next/router";
 
-export async function getServerSideProps(context: any) {
+export async function getServerSideProps({ req }: any) {
 
-    const author = await API.graphql<GraphQLQuery<GetAuthorQuery>>({
-        query: getAuthor,
-        variables: {
-            id: context.query["authorId"]
-        }
-    });
+    const { Auth } = withSSRContext({ req });
+    const user = await Auth.currentAuthenticatedUser();
 
     return {
         props: {
-            author: author.data?.getAuthor
+            author: {
+                name: user.username,
+                id: user.attributes.sub
+            }
         }
     };
 }
@@ -38,11 +36,11 @@ export default function NewStory({ author }: { author: { name: string, id: strin
             variables: {
                 input: {
                     name: story.name,
-                    lastAddedToAt: new Date(),
+                    lastAddedToAt: new Date().toISOString(),
                     storyAuthorId: author.id,
                     currentMessageId: genesisFragment.nextMessageId,
                     storyRootId: genesisFragment.nextMessageId
-                }
+                } as CreateStoryInput
             }
         });
 

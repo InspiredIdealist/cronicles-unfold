@@ -19,9 +19,8 @@ export default function NewCharacter() {
             variables: {
                 input: {
                     name: character.name,
-                    authorID: user.attributes!.sub!,
-                    id: user.attributes!.sub!
-                } as CreateCharacterInput
+                    authorID: user.attributes!.sub!
+                }
             }
         });
 

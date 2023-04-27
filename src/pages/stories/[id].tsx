@@ -1,10 +1,10 @@
 import { Button, Divider, Expander, ExpanderItem, FieldGroupIcon, Flex, Heading, TextField, View } from '@aws-amplify/ui-react';
 import { API, withSSRContext } from 'aws-amplify';
 import { GraphQLQuery } from '@aws-amplify/api';
-import { GetCharacterQuery, GetStoryQuery, ListStoryFragmentsQuery } from '@/api/graphql';
+import { GetCharacterQuery, GetStoryQuery, ListCharactersQuery, ListStoryFragmentsQuery, ModelCharacterFilterInput } from '@/api/graphql';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { getCharacter, getStory, listStoryFragments } from '@/graphql/queries';
+import { getCharacter, getStory, listCharacters, listStoryFragments } from '@/graphql/queries';
 import { tellATale } from '../api/bot';
 
 
@@ -12,12 +12,12 @@ export async function getServerSideProps({ req }: any) {
 
     const { Auth } = withSSRContext({ req });
     const user = await Auth.currentAuthenticatedUser();
-    const character = await API.graphql<GraphQLQuery<GetCharacterQuery>>({
-        query: getCharacter,
-        variables: { id: user.attributes.sub }
+    const character = await API.graphql<GraphQLQuery<ListCharactersQuery>>({
+        query: listCharacters,
+        variables: { authorID: user.attributes.sub } as ModelCharacterFilterInput
     });
 
-    if (!character.data?.getCharacter) {
+    if (!character.data?.listCharacters?.items || character.data?.listCharacters?.items.length === 0) {
         return {
             redirect: {
                 destination: "/characters/new"
@@ -26,10 +26,10 @@ export async function getServerSideProps({ req }: any) {
     }
 
     return {
-        props: { character: character.data?.getCharacter }
+        // TODO: handle multiple characters
+        props: { character: character.data!.listCharacters!.items[0] }
     };
 }
-
 
 export default function Storyline({ character }: any) {
     const router = useRouter();
