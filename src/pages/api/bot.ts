@@ -44,26 +44,35 @@ export async function ask(hint: string, character: string, characters: string[],
 
     //return resp.text;
 
-    return { fragment: hint, nextMessageId: (Math.random() * 100000).toString() };
+    return { fragment: hint.split("").reverse().join(""), nextMessageId: (Math.random() * 100000).toString() };
 }
 
-export async function tellATale(story: any, hint: string, character: string, characters: string[]) {
+export async function tellATale(story: any, hint: string, character: { id: string, name: string }, characters: string[]) {
 
-    const { fragment, nextMessageId } = await ask(hint, character, characters, story.messageId);
+    const { fragment, nextMessageId } = await ask(hint, character.name, characters, story.messageId);
 
-    const resp = API.graphql<GraphQLQuery<CreateStoryFragmentInput>>({
+    await API.graphql<GraphQLQuery<CreateStoryFragmentInput>>({
         query: createStoryFragment,
         variables: {
             input: {
-                prompt: hint,
-                authorID: story?.storyAuthorId,
-                storyID: story?.id,
+                originId: character.id,
+                originType: "Character",
+                storyStoryFragmentsId: story?.id,
+                fragment: hint,
+            }
+        }
+    });
+
+    await API.graphql<GraphQLQuery<CreateStoryFragmentInput>>({
+        query: createStoryFragment,
+        variables: {
+            input: {
+                originId: nextMessageId,
+                originType: "Narrator",
+                storyStoryFragmentsId: story?.id,
                 fragment,
             }
         }
-    })
+    });
 
-    resp.catch(err => console.error(err));
-
-    return ((await resp).data as any)?.createStoryFragment;
 }

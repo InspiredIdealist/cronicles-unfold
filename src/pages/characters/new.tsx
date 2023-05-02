@@ -19,7 +19,8 @@ export default function NewCharacter() {
             variables: {
                 input: {
                     name: character.name,
-                    authorID: user.attributes!.sub!
+                    ownerId: user.attributes!.sub!,
+                    ownerType: "User"
                 }
             }
         });

@@ -10,15 +10,21 @@ export const createCharacter = /* GraphQL */ `
     createCharacter(input: $input, condition: $condition) {
       id
       name
-      authorID
-      storys {
-        nextToken
-      }
-      storyfragments {
-        nextToken
+      ownerId
+      ownerType
+      story {
+        id
+        currentMessageId
+        storyRootId
+        prevStoryId
+        createdAt
+        lastAddedToAt
+        name
+        updatedAt
       }
       createdAt
       updatedAt
+      storyCharactersId
     }
   }
 `;
@@ -30,15 +36,21 @@ export const updateCharacter = /* GraphQL */ `
     updateCharacter(input: $input, condition: $condition) {
       id
       name
-      authorID
-      storys {
-        nextToken
-      }
-      storyfragments {
-        nextToken
+      ownerId
+      ownerType
+      story {
+        id
+        currentMessageId
+        storyRootId
+        prevStoryId
+        createdAt
+        lastAddedToAt
+        name
+        updatedAt
       }
       createdAt
       updatedAt
+      storyCharactersId
     }
   }
 `;
@@ -50,72 +62,21 @@ export const deleteCharacter = /* GraphQL */ `
     deleteCharacter(input: $input, condition: $condition) {
       id
       name
-      authorID
-      storys {
-        nextToken
-      }
-      storyfragments {
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createAuthor = /* GraphQL */ `
-  mutation CreateAuthor(
-    $input: CreateAuthorInput!
-    $condition: ModelAuthorConditionInput
-  ) {
-    createAuthor(input: $input, condition: $condition) {
-      id
-      name
-      StoryFragments {
-        nextToken
-      }
-      Characters {
-        nextToken
+      ownerId
+      ownerType
+      story {
+        id
+        currentMessageId
+        storyRootId
+        prevStoryId
+        createdAt
+        lastAddedToAt
+        name
+        updatedAt
       }
       createdAt
       updatedAt
-    }
-  }
-`;
-export const updateAuthor = /* GraphQL */ `
-  mutation UpdateAuthor(
-    $input: UpdateAuthorInput!
-    $condition: ModelAuthorConditionInput
-  ) {
-    updateAuthor(input: $input, condition: $condition) {
-      id
-      name
-      StoryFragments {
-        nextToken
-      }
-      Characters {
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteAuthor = /* GraphQL */ `
-  mutation DeleteAuthor(
-    $input: DeleteAuthorInput!
-    $condition: ModelAuthorConditionInput
-  ) {
-    deleteAuthor(input: $input, condition: $condition) {
-      id
-      name
-      StoryFragments {
-        nextToken
-      }
-      Characters {
-        nextToken
-      }
-      createdAt
-      updatedAt
+      storyCharactersId
     }
   }
 `;
@@ -126,16 +87,23 @@ export const createStoryFragment = /* GraphQL */ `
   ) {
     createStoryFragment(input: $input, condition: $condition) {
       id
-      storyID
-      prompt
       fragment
-      prevId
       createdAt
-      authorID
-      Characters {
-        nextToken
+      originType
+      originId
+      prevId
+      story {
+        id
+        currentMessageId
+        storyRootId
+        prevStoryId
+        createdAt
+        lastAddedToAt
+        name
+        updatedAt
       }
       updatedAt
+      storyStoryFragmentsId
     }
   }
 `;
@@ -146,16 +114,23 @@ export const updateStoryFragment = /* GraphQL */ `
   ) {
     updateStoryFragment(input: $input, condition: $condition) {
       id
-      storyID
-      prompt
       fragment
-      prevId
       createdAt
-      authorID
-      Characters {
-        nextToken
+      originType
+      originId
+      prevId
+      story {
+        id
+        currentMessageId
+        storyRootId
+        prevStoryId
+        createdAt
+        lastAddedToAt
+        name
+        updatedAt
       }
       updatedAt
+      storyStoryFragmentsId
     }
   }
 `;
@@ -166,16 +141,23 @@ export const deleteStoryFragment = /* GraphQL */ `
   ) {
     deleteStoryFragment(input: $input, condition: $condition) {
       id
-      storyID
-      prompt
       fragment
-      prevId
       createdAt
-      authorID
-      Characters {
-        nextToken
+      originType
+      originId
+      prevId
+      story {
+        id
+        currentMessageId
+        storyRootId
+        prevStoryId
+        createdAt
+        lastAddedToAt
+        name
+        updatedAt
       }
       updatedAt
+      storyStoryFragmentsId
     }
   }
 `;
@@ -188,24 +170,17 @@ export const createStory = /* GraphQL */ `
       id
       currentMessageId
       storyRootId
-      StoryFragments {
+      storyFragments {
         nextToken
       }
       prevStoryId
       createdAt
       lastAddedToAt
-      Author {
-        id
-        name
-        createdAt
-        updatedAt
-      }
-      Characters {
+      characters {
         nextToken
       }
       name
       updatedAt
-      storyAuthorId
     }
   }
 `;
@@ -218,24 +193,17 @@ export const updateStory = /* GraphQL */ `
       id
       currentMessageId
       storyRootId
-      StoryFragments {
+      storyFragments {
         nextToken
       }
       prevStoryId
       createdAt
       lastAddedToAt
-      Author {
-        id
-        name
-        createdAt
-        updatedAt
-      }
-      Characters {
+      characters {
         nextToken
       }
       name
       updatedAt
-      storyAuthorId
     }
   }
 `;
@@ -248,212 +216,16 @@ export const deleteStory = /* GraphQL */ `
       id
       currentMessageId
       storyRootId
-      StoryFragments {
+      storyFragments {
         nextToken
       }
       prevStoryId
       createdAt
       lastAddedToAt
-      Author {
-        id
-        name
-        createdAt
-        updatedAt
-      }
-      Characters {
+      characters {
         nextToken
       }
       name
-      updatedAt
-      storyAuthorId
-    }
-  }
-`;
-export const createStoryCharacter = /* GraphQL */ `
-  mutation CreateStoryCharacter(
-    $input: CreateStoryCharacterInput!
-    $condition: ModelStoryCharacterConditionInput
-  ) {
-    createStoryCharacter(input: $input, condition: $condition) {
-      id
-      characterId
-      storyId
-      character {
-        id
-        name
-        authorID
-        createdAt
-        updatedAt
-      }
-      story {
-        id
-        currentMessageId
-        storyRootId
-        prevStoryId
-        createdAt
-        lastAddedToAt
-        name
-        updatedAt
-        storyAuthorId
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateStoryCharacter = /* GraphQL */ `
-  mutation UpdateStoryCharacter(
-    $input: UpdateStoryCharacterInput!
-    $condition: ModelStoryCharacterConditionInput
-  ) {
-    updateStoryCharacter(input: $input, condition: $condition) {
-      id
-      characterId
-      storyId
-      character {
-        id
-        name
-        authorID
-        createdAt
-        updatedAt
-      }
-      story {
-        id
-        currentMessageId
-        storyRootId
-        prevStoryId
-        createdAt
-        lastAddedToAt
-        name
-        updatedAt
-        storyAuthorId
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteStoryCharacter = /* GraphQL */ `
-  mutation DeleteStoryCharacter(
-    $input: DeleteStoryCharacterInput!
-    $condition: ModelStoryCharacterConditionInput
-  ) {
-    deleteStoryCharacter(input: $input, condition: $condition) {
-      id
-      characterId
-      storyId
-      character {
-        id
-        name
-        authorID
-        createdAt
-        updatedAt
-      }
-      story {
-        id
-        currentMessageId
-        storyRootId
-        prevStoryId
-        createdAt
-        lastAddedToAt
-        name
-        updatedAt
-        storyAuthorId
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createStoryFragmentCharacter = /* GraphQL */ `
-  mutation CreateStoryFragmentCharacter(
-    $input: CreateStoryFragmentCharacterInput!
-    $condition: ModelStoryFragmentCharacterConditionInput
-  ) {
-    createStoryFragmentCharacter(input: $input, condition: $condition) {
-      id
-      characterId
-      storyFragmentId
-      character {
-        id
-        name
-        authorID
-        createdAt
-        updatedAt
-      }
-      storyFragment {
-        id
-        storyID
-        prompt
-        fragment
-        prevId
-        createdAt
-        authorID
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateStoryFragmentCharacter = /* GraphQL */ `
-  mutation UpdateStoryFragmentCharacter(
-    $input: UpdateStoryFragmentCharacterInput!
-    $condition: ModelStoryFragmentCharacterConditionInput
-  ) {
-    updateStoryFragmentCharacter(input: $input, condition: $condition) {
-      id
-      characterId
-      storyFragmentId
-      character {
-        id
-        name
-        authorID
-        createdAt
-        updatedAt
-      }
-      storyFragment {
-        id
-        storyID
-        prompt
-        fragment
-        prevId
-        createdAt
-        authorID
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteStoryFragmentCharacter = /* GraphQL */ `
-  mutation DeleteStoryFragmentCharacter(
-    $input: DeleteStoryFragmentCharacterInput!
-    $condition: ModelStoryFragmentCharacterConditionInput
-  ) {
-    deleteStoryFragmentCharacter(input: $input, condition: $condition) {
-      id
-      characterId
-      storyFragmentId
-      character {
-        id
-        name
-        authorID
-        createdAt
-        updatedAt
-      }
-      storyFragment {
-        id
-        storyID
-        prompt
-        fragment
-        prevId
-        createdAt
-        authorID
-        updatedAt
-      }
-      createdAt
       updatedAt
     }
   }

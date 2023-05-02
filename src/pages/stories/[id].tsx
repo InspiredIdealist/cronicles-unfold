@@ -1,33 +1,28 @@
-import { Button, Divider, Expander, ExpanderItem, FieldGroupIcon, Flex, Heading, TextField, View } from '@aws-amplify/ui-react';
+import { Button, Divider, FieldGroupIcon, Flex, Heading, TextField, View } from '@aws-amplify/ui-react';
 import { API, withSSRContext } from 'aws-amplify';
-import { GraphQLQuery } from '@aws-amplify/api';
-import { GetCharacterQuery, GetStoryQuery, ListCharactersQuery, ListStoryFragmentsQuery, ModelCharacterFilterInput } from '@/api/graphql';
+import { GraphQLQuery, GraphQLSubscription } from '@aws-amplify/api';
+import { GetStoryQuery, ListStoryFragmentsQuery, ModelStoryFragmentFilterInput, OnCreateStoryFragmentSubscription } from '@/api/graphql';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { getCharacter, getStory, listCharacters, listStoryFragments } from '@/graphql/queries';
+import { getStory, listStoryFragments } from '@/graphql/queries';
 import { tellATale } from '../api/bot';
+import { onCreateStoryFragment } from '@/graphql/subscriptions';
 
 
 export async function getServerSideProps({ req }: any) {
 
     const { Auth } = withSSRContext({ req });
     const user = await Auth.currentAuthenticatedUser();
-    const character = await API.graphql<GraphQLQuery<ListCharactersQuery>>({
-        query: listCharacters,
-        variables: { authorID: user.attributes.sub } as ModelCharacterFilterInput
-    });
 
-    if (!character.data?.listCharacters?.items || character.data?.listCharacters?.items.length === 0) {
-        return {
-            redirect: {
-                destination: "/characters/new"
-            }
-        };
-    }
+    const character = {
+        id: user.attributes.sub,
+        name: user.attributes.preferred_username
+    };
 
     return {
-        // TODO: handle multiple characters
-        props: { character: character.data!.listCharacters!.items[0] }
+        props: {
+            character
+        }
     };
 }
 
@@ -37,28 +32,81 @@ export default function Storyline({ character }: any) {
     const [story, setStory] = useState<any>();
     const [fragments, setFragments] = useState<any[]>([]);
     const [prompt, setPrompt] = useState<string>("");
+    const [characters, setCharacters] = useState<any[]>([]);
 
     useEffect(() => {
-        if (id)
-            API.graphql<GraphQLQuery<GetStoryQuery>>({ query: getStory, variables: { id } })
-                .then(s => s.data?.getStory)
-                .then(s => {
-                    setStory(s as any);
-                    API.graphql<GraphQLQuery<ListStoryFragmentsQuery>>({
+        if (id) {
+            API.graphql<GraphQLQuery<GetStoryQuery>>({
+                query: getStory,
+                variables: { id }
+            }).then(s => s.data?.getStory)
+                .then(async s => {
+                    setStory(s);
+                    const resp = await API.graphql<GraphQLQuery<ListStoryFragmentsQuery>>({
                         query: listStoryFragments,
-                        variables: { filter: { storyID: { eq: id } } }
-                    })
-                        .then(f => f.data?.listStoryFragments?.items)
-                        .then(f => setFragments(f as any[]))
-                });
+                        variables: {
+                            filter: {
+                                storyStoryFragmentsId: { eq: s!.id },
+                            } as ModelStoryFragmentFilterInput
+
+                        }
+                    });
+                    const data = resp.data?.listStoryFragments;
+                    let nextToken = data?.nextToken;
+                    let fragments = data?.items;
+                    while (nextToken) {
+                        const nextResp = await API.graphql<GraphQLQuery<ListStoryFragmentsQuery>>({
+                            query: listStoryFragments,
+                            variables: {
+                                nextToken
+                            }
+                        });
+                        fragments = fragments?.concat(nextResp.data?.listStoryFragments?.items as any);
+                        nextToken = nextResp.data?.listStoryFragments?.nextToken;
+                    }
+                    setFragments(fragments as any[]);
+                    window.scrollTo(0, document.body.scrollHeight);
+                })
+
+            const subscription = API.graphql<GraphQLSubscription<OnCreateStoryFragmentSubscription>>({
+                query: onCreateStoryFragment,
+                variables: {
+                    filter: {}
+                }
+            });
+
+            const token = subscription.subscribe(({ value }) => {
+                const data = value.data?.onCreateStoryFragment;
+                if (data && data.story?.id === id) {
+                    setFragments(f => f.concat([data]));
+                    window.scrollTo(0, document.body.scrollHeight);
+                }
+            });
+
+            // this ensures that only one subscription is kept at a time
+            return token.unsubscribe.bind(token);
+        }
     }, [id]);
 
+    const charMap = new Map<string, string>();
+    characters.forEach(c => {
+        charMap.set(c.id, c.name);
+    });
+
     const frags = fragments?.sort((a, b) => a.createdAt > b.createdAt ? 1 : -1).map((frag) => (
-        <ExpanderItem value={frag?.authorID} key={frag?.id} title={frag?.fragment}>
-            <p>{frag?.prompt}</p>
-            <p>{frag?.createdAt}</p>
-        </ExpanderItem>
+        <View
+            key={frag?.id}
+            as="div"
+            ariaLabel="View example"
+            backgroundColor="var(--amplify-colors-white)"
+            height="3rem"
+            maxWidth="100%"
+            padding="1rem"
+        >
+            <div >{frag?.originType}: {frag?.fragment}</div>
+        </View>
     ));
+
 
     return (
         <>
@@ -66,16 +114,14 @@ export default function Storyline({ character }: any) {
                 <Heading style={{ textAlign: "center" }} level={1}>{story?.name}</Heading>
                 <Divider orientation='horizontal' />
                 <div>
-                    <Expander type="multiple">
-                        {frags}
-                    </Expander>
+                    {frags}
                     <Divider orientation='horizontal' label="current" />
                 </div>
                 <div />
                 <View
                     className="bottom-0 w-full fixed"
                     backgroundColor="var(--amplify-colors-white)"
-                    borderRadius="6px"
+                    borderRadius="3px"
                     border="1px solid var(--amplify-colors-black)"
                     boxShadow="3px 3px 5px 6px var(--amplify-colors-neutral-60)"
                     color="var(--amplify-colors-blue-60)"
@@ -84,11 +130,10 @@ export default function Storyline({ character }: any) {
                 >
                     <form onSubmit={async (e) => {
                         e.preventDefault();
-                        const newFrag = await tellATale(story, prompt, character, story.characters);
-                        setFragments(prev => prev.concat([newFrag]));
+                        await tellATale(story, prompt, character, story.characters);
                         setPrompt("");
-
                     }}>
+                        <p>fragments: {fragments.length}</p>
                         <TextField
                             label=""
                             value={prompt}

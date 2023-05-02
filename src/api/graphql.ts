@@ -5,15 +5,19 @@
 export type CreateCharacterInput = {
   id?: string | null,
   name?: string | null,
-  authorID: string,
+  ownerId: string,
+  ownerType: string,
+  storyCharactersId?: string | null,
 };
 
 export type ModelCharacterConditionInput = {
   name?: ModelStringInput | null,
-  authorID?: ModelIDInput | null,
+  ownerId?: ModelStringInput | null,
+  ownerType?: ModelStringInput | null,
   and?: Array< ModelCharacterConditionInput | null > | null,
   or?: Array< ModelCharacterConditionInput | null > | null,
   not?: ModelCharacterConditionInput | null,
+  storyCharactersId?: ModelIDInput | null,
 };
 
 export type ModelStringInput = {
@@ -76,28 +80,12 @@ export type Character = {
   __typename: "Character",
   id: string,
   name?: string | null,
-  authorID: string,
-  storys?: ModelStoryCharacterConnection | null,
-  storyfragments?: ModelStoryFragmentCharacterConnection | null,
+  ownerId: string,
+  ownerType: string,
+  story?: Story | null,
   createdAt: string,
   updatedAt: string,
-};
-
-export type ModelStoryCharacterConnection = {
-  __typename: "ModelStoryCharacterConnection",
-  items:  Array<StoryCharacter | null >,
-  nextToken?: string | null,
-};
-
-export type StoryCharacter = {
-  __typename: "StoryCharacter",
-  id: string,
-  characterId: string,
-  storyId: string,
-  character: Character,
-  story: Story,
-  createdAt: string,
-  updatedAt: string,
+  storyCharactersId?: string | null,
 };
 
 export type Story = {
@@ -105,15 +93,13 @@ export type Story = {
   id: string,
   currentMessageId: string,
   storyRootId: string,
-  StoryFragments?: ModelStoryFragmentConnection | null,
+  storyFragments?: ModelStoryFragmentConnection | null,
   prevStoryId?: string | null,
   createdAt: string,
   lastAddedToAt: string,
-  Author: Author,
-  Characters?: ModelStoryCharacterConnection | null,
-  name?: string | null,
+  characters?: ModelCharacterConnection | null,
+  name: string,
   updatedAt: string,
-  storyAuthorId: string,
 };
 
 export type ModelStoryFragmentConnection = {
@@ -125,41 +111,14 @@ export type ModelStoryFragmentConnection = {
 export type StoryFragment = {
   __typename: "StoryFragment",
   id: string,
-  storyID: string,
-  prompt?: string | null,
   fragment: string,
+  createdAt: string,
+  originType: string,
+  originId: string,
   prevId?: string | null,
-  createdAt: string,
-  authorID: string,
-  Characters?: ModelStoryFragmentCharacterConnection | null,
+  story?: Story | null,
   updatedAt: string,
-};
-
-export type ModelStoryFragmentCharacterConnection = {
-  __typename: "ModelStoryFragmentCharacterConnection",
-  items:  Array<StoryFragmentCharacter | null >,
-  nextToken?: string | null,
-};
-
-export type StoryFragmentCharacter = {
-  __typename: "StoryFragmentCharacter",
-  id: string,
-  characterId: string,
-  storyFragmentId: string,
-  character: Character,
-  storyFragment: StoryFragment,
-  createdAt: string,
-  updatedAt: string,
-};
-
-export type Author = {
-  __typename: "Author",
-  id: string,
-  name: string,
-  StoryFragments?: ModelStoryFragmentConnection | null,
-  Characters?: ModelCharacterConnection | null,
-  createdAt: string,
-  updatedAt: string,
+  storyStoryFragmentsId?: string | null,
 };
 
 export type ModelCharacterConnection = {
@@ -171,64 +130,45 @@ export type ModelCharacterConnection = {
 export type UpdateCharacterInput = {
   id: string,
   name?: string | null,
-  authorID?: string | null,
+  ownerId?: string | null,
+  ownerType?: string | null,
+  storyCharactersId?: string | null,
 };
 
 export type DeleteCharacterInput = {
   id: string,
 };
 
-export type CreateAuthorInput = {
-  id?: string | null,
-  name: string,
-};
-
-export type ModelAuthorConditionInput = {
-  name?: ModelStringInput | null,
-  and?: Array< ModelAuthorConditionInput | null > | null,
-  or?: Array< ModelAuthorConditionInput | null > | null,
-  not?: ModelAuthorConditionInput | null,
-};
-
-export type UpdateAuthorInput = {
-  id: string,
-  name?: string | null,
-};
-
-export type DeleteAuthorInput = {
-  id: string,
-};
-
 export type CreateStoryFragmentInput = {
   id?: string | null,
-  storyID: string,
-  prompt?: string | null,
   fragment: string,
-  prevId?: string | null,
   createdAt?: string | null,
-  authorID: string,
+  originType: string,
+  originId: string,
+  prevId?: string | null,
+  storyStoryFragmentsId?: string | null,
 };
 
 export type ModelStoryFragmentConditionInput = {
-  storyID?: ModelIDInput | null,
-  prompt?: ModelStringInput | null,
   fragment?: ModelStringInput | null,
-  prevId?: ModelStringInput | null,
   createdAt?: ModelStringInput | null,
-  authorID?: ModelIDInput | null,
+  originType?: ModelStringInput | null,
+  originId?: ModelStringInput | null,
+  prevId?: ModelStringInput | null,
   and?: Array< ModelStoryFragmentConditionInput | null > | null,
   or?: Array< ModelStoryFragmentConditionInput | null > | null,
   not?: ModelStoryFragmentConditionInput | null,
+  storyStoryFragmentsId?: ModelIDInput | null,
 };
 
 export type UpdateStoryFragmentInput = {
   id: string,
-  storyID?: string | null,
-  prompt?: string | null,
   fragment?: string | null,
-  prevId?: string | null,
   createdAt?: string | null,
-  authorID?: string | null,
+  originType?: string | null,
+  originId?: string | null,
+  prevId?: string | null,
+  storyStoryFragmentsId?: string | null,
 };
 
 export type DeleteStoryFragmentInput = {
@@ -242,8 +182,7 @@ export type CreateStoryInput = {
   prevStoryId?: string | null,
   createdAt?: string | null,
   lastAddedToAt: string,
-  name?: string | null,
-  storyAuthorId: string,
+  name: string,
 };
 
 export type ModelStoryConditionInput = {
@@ -256,7 +195,6 @@ export type ModelStoryConditionInput = {
   and?: Array< ModelStoryConditionInput | null > | null,
   or?: Array< ModelStoryConditionInput | null > | null,
   not?: ModelStoryConditionInput | null,
-  storyAuthorId?: ModelIDInput | null,
 };
 
 export type UpdateStoryInput = {
@@ -267,101 +205,34 @@ export type UpdateStoryInput = {
   createdAt?: string | null,
   lastAddedToAt?: string | null,
   name?: string | null,
-  storyAuthorId?: string | null,
 };
 
 export type DeleteStoryInput = {
   id: string,
 };
 
-export type CreateStoryCharacterInput = {
-  id?: string | null,
-  characterId: string,
-  storyId: string,
-};
-
-export type ModelStoryCharacterConditionInput = {
-  characterId?: ModelIDInput | null,
-  storyId?: ModelIDInput | null,
-  and?: Array< ModelStoryCharacterConditionInput | null > | null,
-  or?: Array< ModelStoryCharacterConditionInput | null > | null,
-  not?: ModelStoryCharacterConditionInput | null,
-};
-
-export type UpdateStoryCharacterInput = {
-  id: string,
-  characterId?: string | null,
-  storyId?: string | null,
-};
-
-export type DeleteStoryCharacterInput = {
-  id: string,
-};
-
-export type CreateStoryFragmentCharacterInput = {
-  id?: string | null,
-  characterId: string,
-  storyFragmentId: string,
-};
-
-export type ModelStoryFragmentCharacterConditionInput = {
-  characterId?: ModelIDInput | null,
-  storyFragmentId?: ModelIDInput | null,
-  and?: Array< ModelStoryFragmentCharacterConditionInput | null > | null,
-  or?: Array< ModelStoryFragmentCharacterConditionInput | null > | null,
-  not?: ModelStoryFragmentCharacterConditionInput | null,
-};
-
-export type UpdateStoryFragmentCharacterInput = {
-  id: string,
-  characterId?: string | null,
-  storyFragmentId?: string | null,
-};
-
-export type DeleteStoryFragmentCharacterInput = {
-  id: string,
-};
-
 export type ModelCharacterFilterInput = {
   id?: ModelIDInput | null,
   name?: ModelStringInput | null,
-  authorID?: ModelIDInput | null,
+  ownerId?: ModelStringInput | null,
+  ownerType?: ModelStringInput | null,
   and?: Array< ModelCharacterFilterInput | null > | null,
   or?: Array< ModelCharacterFilterInput | null > | null,
   not?: ModelCharacterFilterInput | null,
-};
-
-export enum ModelSortDirection {
-  ASC = "ASC",
-  DESC = "DESC",
-}
-
-
-export type ModelAuthorFilterInput = {
-  id?: ModelIDInput | null,
-  name?: ModelStringInput | null,
-  and?: Array< ModelAuthorFilterInput | null > | null,
-  or?: Array< ModelAuthorFilterInput | null > | null,
-  not?: ModelAuthorFilterInput | null,
-};
-
-export type ModelAuthorConnection = {
-  __typename: "ModelAuthorConnection",
-  items:  Array<Author | null >,
-  nextToken?: string | null,
+  storyCharactersId?: ModelIDInput | null,
 };
 
 export type ModelStoryFragmentFilterInput = {
   id?: ModelIDInput | null,
-  storyID?: ModelIDInput | null,
-  prompt?: ModelStringInput | null,
   fragment?: ModelStringInput | null,
-  prevId?: ModelStringInput | null,
   createdAt?: ModelStringInput | null,
-  authorID?: ModelIDInput | null,
+  originType?: ModelStringInput | null,
+  originId?: ModelStringInput | null,
+  prevId?: ModelStringInput | null,
   and?: Array< ModelStoryFragmentFilterInput | null > | null,
   or?: Array< ModelStoryFragmentFilterInput | null > | null,
   not?: ModelStoryFragmentFilterInput | null,
+  storyStoryFragmentsId?: ModelIDInput | null,
 };
 
 export type ModelStoryFilterInput = {
@@ -375,7 +246,6 @@ export type ModelStoryFilterInput = {
   and?: Array< ModelStoryFilterInput | null > | null,
   or?: Array< ModelStoryFilterInput | null > | null,
   not?: ModelStoryFilterInput | null,
-  storyAuthorId?: ModelIDInput | null,
 };
 
 export type ModelStoryConnection = {
@@ -384,28 +254,11 @@ export type ModelStoryConnection = {
   nextToken?: string | null,
 };
 
-export type ModelStoryCharacterFilterInput = {
-  id?: ModelIDInput | null,
-  characterId?: ModelIDInput | null,
-  storyId?: ModelIDInput | null,
-  and?: Array< ModelStoryCharacterFilterInput | null > | null,
-  or?: Array< ModelStoryCharacterFilterInput | null > | null,
-  not?: ModelStoryCharacterFilterInput | null,
-};
-
-export type ModelStoryFragmentCharacterFilterInput = {
-  id?: ModelIDInput | null,
-  characterId?: ModelIDInput | null,
-  storyFragmentId?: ModelIDInput | null,
-  and?: Array< ModelStoryFragmentCharacterFilterInput | null > | null,
-  or?: Array< ModelStoryFragmentCharacterFilterInput | null > | null,
-  not?: ModelStoryFragmentCharacterFilterInput | null,
-};
-
 export type ModelSubscriptionCharacterFilterInput = {
   id?: ModelSubscriptionIDInput | null,
   name?: ModelSubscriptionStringInput | null,
-  authorID?: ModelSubscriptionIDInput | null,
+  ownerId?: ModelSubscriptionStringInput | null,
+  ownerType?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionCharacterFilterInput | null > | null,
   or?: Array< ModelSubscriptionCharacterFilterInput | null > | null,
 };
@@ -440,21 +293,13 @@ export type ModelSubscriptionStringInput = {
   notIn?: Array< string | null > | null,
 };
 
-export type ModelSubscriptionAuthorFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  name?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionAuthorFilterInput | null > | null,
-  or?: Array< ModelSubscriptionAuthorFilterInput | null > | null,
-};
-
 export type ModelSubscriptionStoryFragmentFilterInput = {
   id?: ModelSubscriptionIDInput | null,
-  storyID?: ModelSubscriptionIDInput | null,
-  prompt?: ModelSubscriptionStringInput | null,
   fragment?: ModelSubscriptionStringInput | null,
-  prevId?: ModelSubscriptionStringInput | null,
   createdAt?: ModelSubscriptionStringInput | null,
-  authorID?: ModelSubscriptionIDInput | null,
+  originType?: ModelSubscriptionStringInput | null,
+  originId?: ModelSubscriptionStringInput | null,
+  prevId?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionStoryFragmentFilterInput | null > | null,
   or?: Array< ModelSubscriptionStoryFragmentFilterInput | null > | null,
 };
@@ -471,22 +316,6 @@ export type ModelSubscriptionStoryFilterInput = {
   or?: Array< ModelSubscriptionStoryFilterInput | null > | null,
 };
 
-export type ModelSubscriptionStoryCharacterFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  characterId?: ModelSubscriptionIDInput | null,
-  storyId?: ModelSubscriptionIDInput | null,
-  and?: Array< ModelSubscriptionStoryCharacterFilterInput | null > | null,
-  or?: Array< ModelSubscriptionStoryCharacterFilterInput | null > | null,
-};
-
-export type ModelSubscriptionStoryFragmentCharacterFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  characterId?: ModelSubscriptionIDInput | null,
-  storyFragmentId?: ModelSubscriptionIDInput | null,
-  and?: Array< ModelSubscriptionStoryFragmentCharacterFilterInput | null > | null,
-  or?: Array< ModelSubscriptionStoryFragmentCharacterFilterInput | null > | null,
-};
-
 export type CreateCharacterMutationVariables = {
   input: CreateCharacterInput,
   condition?: ModelCharacterConditionInput | null,
@@ -497,17 +326,22 @@ export type CreateCharacterMutation = {
     __typename: "Character",
     id: string,
     name?: string | null,
-    authorID: string,
-    storys?:  {
-      __typename: "ModelStoryCharacterConnection",
-      nextToken?: string | null,
-    } | null,
-    storyfragments?:  {
-      __typename: "ModelStoryFragmentCharacterConnection",
-      nextToken?: string | null,
+    ownerId: string,
+    ownerType: string,
+    story?:  {
+      __typename: "Story",
+      id: string,
+      currentMessageId: string,
+      storyRootId: string,
+      prevStoryId?: string | null,
+      createdAt: string,
+      lastAddedToAt: string,
+      name: string,
+      updatedAt: string,
     } | null,
     createdAt: string,
     updatedAt: string,
+    storyCharactersId?: string | null,
   } | null,
 };
 
@@ -521,17 +355,22 @@ export type UpdateCharacterMutation = {
     __typename: "Character",
     id: string,
     name?: string | null,
-    authorID: string,
-    storys?:  {
-      __typename: "ModelStoryCharacterConnection",
-      nextToken?: string | null,
-    } | null,
-    storyfragments?:  {
-      __typename: "ModelStoryFragmentCharacterConnection",
-      nextToken?: string | null,
+    ownerId: string,
+    ownerType: string,
+    story?:  {
+      __typename: "Story",
+      id: string,
+      currentMessageId: string,
+      storyRootId: string,
+      prevStoryId?: string | null,
+      createdAt: string,
+      lastAddedToAt: string,
+      name: string,
+      updatedAt: string,
     } | null,
     createdAt: string,
     updatedAt: string,
+    storyCharactersId?: string | null,
   } | null,
 };
 
@@ -545,86 +384,22 @@ export type DeleteCharacterMutation = {
     __typename: "Character",
     id: string,
     name?: string | null,
-    authorID: string,
-    storys?:  {
-      __typename: "ModelStoryCharacterConnection",
-      nextToken?: string | null,
-    } | null,
-    storyfragments?:  {
-      __typename: "ModelStoryFragmentCharacterConnection",
-      nextToken?: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type CreateAuthorMutationVariables = {
-  input: CreateAuthorInput,
-  condition?: ModelAuthorConditionInput | null,
-};
-
-export type CreateAuthorMutation = {
-  createAuthor?:  {
-    __typename: "Author",
-    id: string,
-    name: string,
-    StoryFragments?:  {
-      __typename: "ModelStoryFragmentConnection",
-      nextToken?: string | null,
-    } | null,
-    Characters?:  {
-      __typename: "ModelCharacterConnection",
-      nextToken?: string | null,
+    ownerId: string,
+    ownerType: string,
+    story?:  {
+      __typename: "Story",
+      id: string,
+      currentMessageId: string,
+      storyRootId: string,
+      prevStoryId?: string | null,
+      createdAt: string,
+      lastAddedToAt: string,
+      name: string,
+      updatedAt: string,
     } | null,
     createdAt: string,
     updatedAt: string,
-  } | null,
-};
-
-export type UpdateAuthorMutationVariables = {
-  input: UpdateAuthorInput,
-  condition?: ModelAuthorConditionInput | null,
-};
-
-export type UpdateAuthorMutation = {
-  updateAuthor?:  {
-    __typename: "Author",
-    id: string,
-    name: string,
-    StoryFragments?:  {
-      __typename: "ModelStoryFragmentConnection",
-      nextToken?: string | null,
-    } | null,
-    Characters?:  {
-      __typename: "ModelCharacterConnection",
-      nextToken?: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type DeleteAuthorMutationVariables = {
-  input: DeleteAuthorInput,
-  condition?: ModelAuthorConditionInput | null,
-};
-
-export type DeleteAuthorMutation = {
-  deleteAuthor?:  {
-    __typename: "Author",
-    id: string,
-    name: string,
-    StoryFragments?:  {
-      __typename: "ModelStoryFragmentConnection",
-      nextToken?: string | null,
-    } | null,
-    Characters?:  {
-      __typename: "ModelCharacterConnection",
-      nextToken?: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
+    storyCharactersId?: string | null,
   } | null,
 };
 
@@ -637,17 +412,24 @@ export type CreateStoryFragmentMutation = {
   createStoryFragment?:  {
     __typename: "StoryFragment",
     id: string,
-    storyID: string,
-    prompt?: string | null,
     fragment: string,
-    prevId?: string | null,
     createdAt: string,
-    authorID: string,
-    Characters?:  {
-      __typename: "ModelStoryFragmentCharacterConnection",
-      nextToken?: string | null,
+    originType: string,
+    originId: string,
+    prevId?: string | null,
+    story?:  {
+      __typename: "Story",
+      id: string,
+      currentMessageId: string,
+      storyRootId: string,
+      prevStoryId?: string | null,
+      createdAt: string,
+      lastAddedToAt: string,
+      name: string,
+      updatedAt: string,
     } | null,
     updatedAt: string,
+    storyStoryFragmentsId?: string | null,
   } | null,
 };
 
@@ -660,17 +442,24 @@ export type UpdateStoryFragmentMutation = {
   updateStoryFragment?:  {
     __typename: "StoryFragment",
     id: string,
-    storyID: string,
-    prompt?: string | null,
     fragment: string,
-    prevId?: string | null,
     createdAt: string,
-    authorID: string,
-    Characters?:  {
-      __typename: "ModelStoryFragmentCharacterConnection",
-      nextToken?: string | null,
+    originType: string,
+    originId: string,
+    prevId?: string | null,
+    story?:  {
+      __typename: "Story",
+      id: string,
+      currentMessageId: string,
+      storyRootId: string,
+      prevStoryId?: string | null,
+      createdAt: string,
+      lastAddedToAt: string,
+      name: string,
+      updatedAt: string,
     } | null,
     updatedAt: string,
+    storyStoryFragmentsId?: string | null,
   } | null,
 };
 
@@ -683,17 +472,24 @@ export type DeleteStoryFragmentMutation = {
   deleteStoryFragment?:  {
     __typename: "StoryFragment",
     id: string,
-    storyID: string,
-    prompt?: string | null,
     fragment: string,
-    prevId?: string | null,
     createdAt: string,
-    authorID: string,
-    Characters?:  {
-      __typename: "ModelStoryFragmentCharacterConnection",
-      nextToken?: string | null,
+    originType: string,
+    originId: string,
+    prevId?: string | null,
+    story?:  {
+      __typename: "Story",
+      id: string,
+      currentMessageId: string,
+      storyRootId: string,
+      prevStoryId?: string | null,
+      createdAt: string,
+      lastAddedToAt: string,
+      name: string,
+      updatedAt: string,
     } | null,
     updatedAt: string,
+    storyStoryFragmentsId?: string | null,
   } | null,
 };
 
@@ -708,27 +504,19 @@ export type CreateStoryMutation = {
     id: string,
     currentMessageId: string,
     storyRootId: string,
-    StoryFragments?:  {
+    storyFragments?:  {
       __typename: "ModelStoryFragmentConnection",
       nextToken?: string | null,
     } | null,
     prevStoryId?: string | null,
     createdAt: string,
     lastAddedToAt: string,
-    Author:  {
-      __typename: "Author",
-      id: string,
-      name: string,
-      createdAt: string,
-      updatedAt: string,
-    },
-    Characters?:  {
-      __typename: "ModelStoryCharacterConnection",
+    characters?:  {
+      __typename: "ModelCharacterConnection",
       nextToken?: string | null,
     } | null,
-    name?: string | null,
+    name: string,
     updatedAt: string,
-    storyAuthorId: string,
   } | null,
 };
 
@@ -743,27 +531,19 @@ export type UpdateStoryMutation = {
     id: string,
     currentMessageId: string,
     storyRootId: string,
-    StoryFragments?:  {
+    storyFragments?:  {
       __typename: "ModelStoryFragmentConnection",
       nextToken?: string | null,
     } | null,
     prevStoryId?: string | null,
     createdAt: string,
     lastAddedToAt: string,
-    Author:  {
-      __typename: "Author",
-      id: string,
-      name: string,
-      createdAt: string,
-      updatedAt: string,
-    },
-    Characters?:  {
-      __typename: "ModelStoryCharacterConnection",
+    characters?:  {
+      __typename: "ModelCharacterConnection",
       nextToken?: string | null,
     } | null,
-    name?: string | null,
+    name: string,
     updatedAt: string,
-    storyAuthorId: string,
   } | null,
 };
 
@@ -778,239 +558,18 @@ export type DeleteStoryMutation = {
     id: string,
     currentMessageId: string,
     storyRootId: string,
-    StoryFragments?:  {
+    storyFragments?:  {
       __typename: "ModelStoryFragmentConnection",
       nextToken?: string | null,
     } | null,
     prevStoryId?: string | null,
     createdAt: string,
     lastAddedToAt: string,
-    Author:  {
-      __typename: "Author",
-      id: string,
-      name: string,
-      createdAt: string,
-      updatedAt: string,
-    },
-    Characters?:  {
-      __typename: "ModelStoryCharacterConnection",
+    characters?:  {
+      __typename: "ModelCharacterConnection",
       nextToken?: string | null,
     } | null,
-    name?: string | null,
-    updatedAt: string,
-    storyAuthorId: string,
-  } | null,
-};
-
-export type CreateStoryCharacterMutationVariables = {
-  input: CreateStoryCharacterInput,
-  condition?: ModelStoryCharacterConditionInput | null,
-};
-
-export type CreateStoryCharacterMutation = {
-  createStoryCharacter?:  {
-    __typename: "StoryCharacter",
-    id: string,
-    characterId: string,
-    storyId: string,
-    character:  {
-      __typename: "Character",
-      id: string,
-      name?: string | null,
-      authorID: string,
-      createdAt: string,
-      updatedAt: string,
-    },
-    story:  {
-      __typename: "Story",
-      id: string,
-      currentMessageId: string,
-      storyRootId: string,
-      prevStoryId?: string | null,
-      createdAt: string,
-      lastAddedToAt: string,
-      name?: string | null,
-      updatedAt: string,
-      storyAuthorId: string,
-    },
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type UpdateStoryCharacterMutationVariables = {
-  input: UpdateStoryCharacterInput,
-  condition?: ModelStoryCharacterConditionInput | null,
-};
-
-export type UpdateStoryCharacterMutation = {
-  updateStoryCharacter?:  {
-    __typename: "StoryCharacter",
-    id: string,
-    characterId: string,
-    storyId: string,
-    character:  {
-      __typename: "Character",
-      id: string,
-      name?: string | null,
-      authorID: string,
-      createdAt: string,
-      updatedAt: string,
-    },
-    story:  {
-      __typename: "Story",
-      id: string,
-      currentMessageId: string,
-      storyRootId: string,
-      prevStoryId?: string | null,
-      createdAt: string,
-      lastAddedToAt: string,
-      name?: string | null,
-      updatedAt: string,
-      storyAuthorId: string,
-    },
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type DeleteStoryCharacterMutationVariables = {
-  input: DeleteStoryCharacterInput,
-  condition?: ModelStoryCharacterConditionInput | null,
-};
-
-export type DeleteStoryCharacterMutation = {
-  deleteStoryCharacter?:  {
-    __typename: "StoryCharacter",
-    id: string,
-    characterId: string,
-    storyId: string,
-    character:  {
-      __typename: "Character",
-      id: string,
-      name?: string | null,
-      authorID: string,
-      createdAt: string,
-      updatedAt: string,
-    },
-    story:  {
-      __typename: "Story",
-      id: string,
-      currentMessageId: string,
-      storyRootId: string,
-      prevStoryId?: string | null,
-      createdAt: string,
-      lastAddedToAt: string,
-      name?: string | null,
-      updatedAt: string,
-      storyAuthorId: string,
-    },
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type CreateStoryFragmentCharacterMutationVariables = {
-  input: CreateStoryFragmentCharacterInput,
-  condition?: ModelStoryFragmentCharacterConditionInput | null,
-};
-
-export type CreateStoryFragmentCharacterMutation = {
-  createStoryFragmentCharacter?:  {
-    __typename: "StoryFragmentCharacter",
-    id: string,
-    characterId: string,
-    storyFragmentId: string,
-    character:  {
-      __typename: "Character",
-      id: string,
-      name?: string | null,
-      authorID: string,
-      createdAt: string,
-      updatedAt: string,
-    },
-    storyFragment:  {
-      __typename: "StoryFragment",
-      id: string,
-      storyID: string,
-      prompt?: string | null,
-      fragment: string,
-      prevId?: string | null,
-      createdAt: string,
-      authorID: string,
-      updatedAt: string,
-    },
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type UpdateStoryFragmentCharacterMutationVariables = {
-  input: UpdateStoryFragmentCharacterInput,
-  condition?: ModelStoryFragmentCharacterConditionInput | null,
-};
-
-export type UpdateStoryFragmentCharacterMutation = {
-  updateStoryFragmentCharacter?:  {
-    __typename: "StoryFragmentCharacter",
-    id: string,
-    characterId: string,
-    storyFragmentId: string,
-    character:  {
-      __typename: "Character",
-      id: string,
-      name?: string | null,
-      authorID: string,
-      createdAt: string,
-      updatedAt: string,
-    },
-    storyFragment:  {
-      __typename: "StoryFragment",
-      id: string,
-      storyID: string,
-      prompt?: string | null,
-      fragment: string,
-      prevId?: string | null,
-      createdAt: string,
-      authorID: string,
-      updatedAt: string,
-    },
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type DeleteStoryFragmentCharacterMutationVariables = {
-  input: DeleteStoryFragmentCharacterInput,
-  condition?: ModelStoryFragmentCharacterConditionInput | null,
-};
-
-export type DeleteStoryFragmentCharacterMutation = {
-  deleteStoryFragmentCharacter?:  {
-    __typename: "StoryFragmentCharacter",
-    id: string,
-    characterId: string,
-    storyFragmentId: string,
-    character:  {
-      __typename: "Character",
-      id: string,
-      name?: string | null,
-      authorID: string,
-      createdAt: string,
-      updatedAt: string,
-    },
-    storyFragment:  {
-      __typename: "StoryFragment",
-      id: string,
-      storyID: string,
-      prompt?: string | null,
-      fragment: string,
-      prevId?: string | null,
-      createdAt: string,
-      authorID: string,
-      updatedAt: string,
-    },
-    createdAt: string,
+    name: string,
     updatedAt: string,
   } | null,
 };
@@ -1024,17 +583,22 @@ export type GetCharacterQuery = {
     __typename: "Character",
     id: string,
     name?: string | null,
-    authorID: string,
-    storys?:  {
-      __typename: "ModelStoryCharacterConnection",
-      nextToken?: string | null,
-    } | null,
-    storyfragments?:  {
-      __typename: "ModelStoryFragmentCharacterConnection",
-      nextToken?: string | null,
+    ownerId: string,
+    ownerType: string,
+    story?:  {
+      __typename: "Story",
+      id: string,
+      currentMessageId: string,
+      storyRootId: string,
+      prevStoryId?: string | null,
+      createdAt: string,
+      lastAddedToAt: string,
+      name: string,
+      updatedAt: string,
     } | null,
     createdAt: string,
     updatedAt: string,
+    storyCharactersId?: string | null,
   } | null,
 };
 
@@ -1051,74 +615,11 @@ export type ListCharactersQuery = {
       __typename: "Character",
       id: string,
       name?: string | null,
-      authorID: string,
+      ownerId: string,
+      ownerType: string,
       createdAt: string,
       updatedAt: string,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type CharactersByAuthorIDQueryVariables = {
-  authorID: string,
-  sortDirection?: ModelSortDirection | null,
-  filter?: ModelCharacterFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type CharactersByAuthorIDQuery = {
-  charactersByAuthorID?:  {
-    __typename: "ModelCharacterConnection",
-    items:  Array< {
-      __typename: "Character",
-      id: string,
-      name?: string | null,
-      authorID: string,
-      createdAt: string,
-      updatedAt: string,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type GetAuthorQueryVariables = {
-  id: string,
-};
-
-export type GetAuthorQuery = {
-  getAuthor?:  {
-    __typename: "Author",
-    id: string,
-    name: string,
-    StoryFragments?:  {
-      __typename: "ModelStoryFragmentConnection",
-      nextToken?: string | null,
-    } | null,
-    Characters?:  {
-      __typename: "ModelCharacterConnection",
-      nextToken?: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type ListAuthorsQueryVariables = {
-  filter?: ModelAuthorFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type ListAuthorsQuery = {
-  listAuthors?:  {
-    __typename: "ModelAuthorConnection",
-    items:  Array< {
-      __typename: "Author",
-      id: string,
-      name: string,
-      createdAt: string,
-      updatedAt: string,
+      storyCharactersId?: string | null,
     } | null >,
     nextToken?: string | null,
   } | null,
@@ -1132,17 +633,24 @@ export type GetStoryFragmentQuery = {
   getStoryFragment?:  {
     __typename: "StoryFragment",
     id: string,
-    storyID: string,
-    prompt?: string | null,
     fragment: string,
-    prevId?: string | null,
     createdAt: string,
-    authorID: string,
-    Characters?:  {
-      __typename: "ModelStoryFragmentCharacterConnection",
-      nextToken?: string | null,
+    originType: string,
+    originId: string,
+    prevId?: string | null,
+    story?:  {
+      __typename: "Story",
+      id: string,
+      currentMessageId: string,
+      storyRootId: string,
+      prevStoryId?: string | null,
+      createdAt: string,
+      lastAddedToAt: string,
+      name: string,
+      updatedAt: string,
     } | null,
     updatedAt: string,
+    storyStoryFragmentsId?: string | null,
   } | null,
 };
 
@@ -1158,65 +666,13 @@ export type ListStoryFragmentsQuery = {
     items:  Array< {
       __typename: "StoryFragment",
       id: string,
-      storyID: string,
-      prompt?: string | null,
       fragment: string,
-      prevId?: string | null,
       createdAt: string,
-      authorID: string,
-      updatedAt: string,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type StoryFragmentsByStoryIDQueryVariables = {
-  storyID: string,
-  sortDirection?: ModelSortDirection | null,
-  filter?: ModelStoryFragmentFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type StoryFragmentsByStoryIDQuery = {
-  storyFragmentsByStoryID?:  {
-    __typename: "ModelStoryFragmentConnection",
-    items:  Array< {
-      __typename: "StoryFragment",
-      id: string,
-      storyID: string,
-      prompt?: string | null,
-      fragment: string,
+      originType: string,
+      originId: string,
       prevId?: string | null,
-      createdAt: string,
-      authorID: string,
       updatedAt: string,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type StoryFragmentsByAuthorIDQueryVariables = {
-  authorID: string,
-  sortDirection?: ModelSortDirection | null,
-  filter?: ModelStoryFragmentFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type StoryFragmentsByAuthorIDQuery = {
-  storyFragmentsByAuthorID?:  {
-    __typename: "ModelStoryFragmentConnection",
-    items:  Array< {
-      __typename: "StoryFragment",
-      id: string,
-      storyID: string,
-      prompt?: string | null,
-      fragment: string,
-      prevId?: string | null,
-      createdAt: string,
-      authorID: string,
-      updatedAt: string,
+      storyStoryFragmentsId?: string | null,
     } | null >,
     nextToken?: string | null,
   } | null,
@@ -1232,27 +688,19 @@ export type GetStoryQuery = {
     id: string,
     currentMessageId: string,
     storyRootId: string,
-    StoryFragments?:  {
+    storyFragments?:  {
       __typename: "ModelStoryFragmentConnection",
       nextToken?: string | null,
     } | null,
     prevStoryId?: string | null,
     createdAt: string,
     lastAddedToAt: string,
-    Author:  {
-      __typename: "Author",
-      id: string,
-      name: string,
-      createdAt: string,
-      updatedAt: string,
-    },
-    Characters?:  {
-      __typename: "ModelStoryCharacterConnection",
+    characters?:  {
+      __typename: "ModelCharacterConnection",
       nextToken?: string | null,
     } | null,
-    name?: string | null,
+    name: string,
     updatedAt: string,
-    storyAuthorId: string,
   } | null,
 };
 
@@ -1273,211 +721,7 @@ export type ListStoriesQuery = {
       prevStoryId?: string | null,
       createdAt: string,
       lastAddedToAt: string,
-      name?: string | null,
-      updatedAt: string,
-      storyAuthorId: string,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type GetStoryCharacterQueryVariables = {
-  id: string,
-};
-
-export type GetStoryCharacterQuery = {
-  getStoryCharacter?:  {
-    __typename: "StoryCharacter",
-    id: string,
-    characterId: string,
-    storyId: string,
-    character:  {
-      __typename: "Character",
-      id: string,
-      name?: string | null,
-      authorID: string,
-      createdAt: string,
-      updatedAt: string,
-    },
-    story:  {
-      __typename: "Story",
-      id: string,
-      currentMessageId: string,
-      storyRootId: string,
-      prevStoryId?: string | null,
-      createdAt: string,
-      lastAddedToAt: string,
-      name?: string | null,
-      updatedAt: string,
-      storyAuthorId: string,
-    },
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type ListStoryCharactersQueryVariables = {
-  filter?: ModelStoryCharacterFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type ListStoryCharactersQuery = {
-  listStoryCharacters?:  {
-    __typename: "ModelStoryCharacterConnection",
-    items:  Array< {
-      __typename: "StoryCharacter",
-      id: string,
-      characterId: string,
-      storyId: string,
-      createdAt: string,
-      updatedAt: string,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type StoryCharactersByCharacterIdQueryVariables = {
-  characterId: string,
-  sortDirection?: ModelSortDirection | null,
-  filter?: ModelStoryCharacterFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type StoryCharactersByCharacterIdQuery = {
-  storyCharactersByCharacterId?:  {
-    __typename: "ModelStoryCharacterConnection",
-    items:  Array< {
-      __typename: "StoryCharacter",
-      id: string,
-      characterId: string,
-      storyId: string,
-      createdAt: string,
-      updatedAt: string,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type StoryCharactersByStoryIdQueryVariables = {
-  storyId: string,
-  sortDirection?: ModelSortDirection | null,
-  filter?: ModelStoryCharacterFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type StoryCharactersByStoryIdQuery = {
-  storyCharactersByStoryId?:  {
-    __typename: "ModelStoryCharacterConnection",
-    items:  Array< {
-      __typename: "StoryCharacter",
-      id: string,
-      characterId: string,
-      storyId: string,
-      createdAt: string,
-      updatedAt: string,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type GetStoryFragmentCharacterQueryVariables = {
-  id: string,
-};
-
-export type GetStoryFragmentCharacterQuery = {
-  getStoryFragmentCharacter?:  {
-    __typename: "StoryFragmentCharacter",
-    id: string,
-    characterId: string,
-    storyFragmentId: string,
-    character:  {
-      __typename: "Character",
-      id: string,
-      name?: string | null,
-      authorID: string,
-      createdAt: string,
-      updatedAt: string,
-    },
-    storyFragment:  {
-      __typename: "StoryFragment",
-      id: string,
-      storyID: string,
-      prompt?: string | null,
-      fragment: string,
-      prevId?: string | null,
-      createdAt: string,
-      authorID: string,
-      updatedAt: string,
-    },
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type ListStoryFragmentCharactersQueryVariables = {
-  filter?: ModelStoryFragmentCharacterFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type ListStoryFragmentCharactersQuery = {
-  listStoryFragmentCharacters?:  {
-    __typename: "ModelStoryFragmentCharacterConnection",
-    items:  Array< {
-      __typename: "StoryFragmentCharacter",
-      id: string,
-      characterId: string,
-      storyFragmentId: string,
-      createdAt: string,
-      updatedAt: string,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type StoryFragmentCharactersByCharacterIdQueryVariables = {
-  characterId: string,
-  sortDirection?: ModelSortDirection | null,
-  filter?: ModelStoryFragmentCharacterFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type StoryFragmentCharactersByCharacterIdQuery = {
-  storyFragmentCharactersByCharacterId?:  {
-    __typename: "ModelStoryFragmentCharacterConnection",
-    items:  Array< {
-      __typename: "StoryFragmentCharacter",
-      id: string,
-      characterId: string,
-      storyFragmentId: string,
-      createdAt: string,
-      updatedAt: string,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type StoryFragmentCharactersByStoryFragmentIdQueryVariables = {
-  storyFragmentId: string,
-  sortDirection?: ModelSortDirection | null,
-  filter?: ModelStoryFragmentCharacterFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type StoryFragmentCharactersByStoryFragmentIdQuery = {
-  storyFragmentCharactersByStoryFragmentId?:  {
-    __typename: "ModelStoryFragmentCharacterConnection",
-    items:  Array< {
-      __typename: "StoryFragmentCharacter",
-      id: string,
-      characterId: string,
-      storyFragmentId: string,
-      createdAt: string,
+      name: string,
       updatedAt: string,
     } | null >,
     nextToken?: string | null,
@@ -1493,17 +737,22 @@ export type OnCreateCharacterSubscription = {
     __typename: "Character",
     id: string,
     name?: string | null,
-    authorID: string,
-    storys?:  {
-      __typename: "ModelStoryCharacterConnection",
-      nextToken?: string | null,
-    } | null,
-    storyfragments?:  {
-      __typename: "ModelStoryFragmentCharacterConnection",
-      nextToken?: string | null,
+    ownerId: string,
+    ownerType: string,
+    story?:  {
+      __typename: "Story",
+      id: string,
+      currentMessageId: string,
+      storyRootId: string,
+      prevStoryId?: string | null,
+      createdAt: string,
+      lastAddedToAt: string,
+      name: string,
+      updatedAt: string,
     } | null,
     createdAt: string,
     updatedAt: string,
+    storyCharactersId?: string | null,
   } | null,
 };
 
@@ -1516,17 +765,22 @@ export type OnUpdateCharacterSubscription = {
     __typename: "Character",
     id: string,
     name?: string | null,
-    authorID: string,
-    storys?:  {
-      __typename: "ModelStoryCharacterConnection",
-      nextToken?: string | null,
-    } | null,
-    storyfragments?:  {
-      __typename: "ModelStoryFragmentCharacterConnection",
-      nextToken?: string | null,
+    ownerId: string,
+    ownerType: string,
+    story?:  {
+      __typename: "Story",
+      id: string,
+      currentMessageId: string,
+      storyRootId: string,
+      prevStoryId?: string | null,
+      createdAt: string,
+      lastAddedToAt: string,
+      name: string,
+      updatedAt: string,
     } | null,
     createdAt: string,
     updatedAt: string,
+    storyCharactersId?: string | null,
   } | null,
 };
 
@@ -1539,83 +793,22 @@ export type OnDeleteCharacterSubscription = {
     __typename: "Character",
     id: string,
     name?: string | null,
-    authorID: string,
-    storys?:  {
-      __typename: "ModelStoryCharacterConnection",
-      nextToken?: string | null,
-    } | null,
-    storyfragments?:  {
-      __typename: "ModelStoryFragmentCharacterConnection",
-      nextToken?: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnCreateAuthorSubscriptionVariables = {
-  filter?: ModelSubscriptionAuthorFilterInput | null,
-};
-
-export type OnCreateAuthorSubscription = {
-  onCreateAuthor?:  {
-    __typename: "Author",
-    id: string,
-    name: string,
-    StoryFragments?:  {
-      __typename: "ModelStoryFragmentConnection",
-      nextToken?: string | null,
-    } | null,
-    Characters?:  {
-      __typename: "ModelCharacterConnection",
-      nextToken?: string | null,
+    ownerId: string,
+    ownerType: string,
+    story?:  {
+      __typename: "Story",
+      id: string,
+      currentMessageId: string,
+      storyRootId: string,
+      prevStoryId?: string | null,
+      createdAt: string,
+      lastAddedToAt: string,
+      name: string,
+      updatedAt: string,
     } | null,
     createdAt: string,
     updatedAt: string,
-  } | null,
-};
-
-export type OnUpdateAuthorSubscriptionVariables = {
-  filter?: ModelSubscriptionAuthorFilterInput | null,
-};
-
-export type OnUpdateAuthorSubscription = {
-  onUpdateAuthor?:  {
-    __typename: "Author",
-    id: string,
-    name: string,
-    StoryFragments?:  {
-      __typename: "ModelStoryFragmentConnection",
-      nextToken?: string | null,
-    } | null,
-    Characters?:  {
-      __typename: "ModelCharacterConnection",
-      nextToken?: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnDeleteAuthorSubscriptionVariables = {
-  filter?: ModelSubscriptionAuthorFilterInput | null,
-};
-
-export type OnDeleteAuthorSubscription = {
-  onDeleteAuthor?:  {
-    __typename: "Author",
-    id: string,
-    name: string,
-    StoryFragments?:  {
-      __typename: "ModelStoryFragmentConnection",
-      nextToken?: string | null,
-    } | null,
-    Characters?:  {
-      __typename: "ModelCharacterConnection",
-      nextToken?: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
+    storyCharactersId?: string | null,
   } | null,
 };
 
@@ -1627,17 +820,24 @@ export type OnCreateStoryFragmentSubscription = {
   onCreateStoryFragment?:  {
     __typename: "StoryFragment",
     id: string,
-    storyID: string,
-    prompt?: string | null,
     fragment: string,
-    prevId?: string | null,
     createdAt: string,
-    authorID: string,
-    Characters?:  {
-      __typename: "ModelStoryFragmentCharacterConnection",
-      nextToken?: string | null,
+    originType: string,
+    originId: string,
+    prevId?: string | null,
+    story?:  {
+      __typename: "Story",
+      id: string,
+      currentMessageId: string,
+      storyRootId: string,
+      prevStoryId?: string | null,
+      createdAt: string,
+      lastAddedToAt: string,
+      name: string,
+      updatedAt: string,
     } | null,
     updatedAt: string,
+    storyStoryFragmentsId?: string | null,
   } | null,
 };
 
@@ -1649,17 +849,24 @@ export type OnUpdateStoryFragmentSubscription = {
   onUpdateStoryFragment?:  {
     __typename: "StoryFragment",
     id: string,
-    storyID: string,
-    prompt?: string | null,
     fragment: string,
-    prevId?: string | null,
     createdAt: string,
-    authorID: string,
-    Characters?:  {
-      __typename: "ModelStoryFragmentCharacterConnection",
-      nextToken?: string | null,
+    originType: string,
+    originId: string,
+    prevId?: string | null,
+    story?:  {
+      __typename: "Story",
+      id: string,
+      currentMessageId: string,
+      storyRootId: string,
+      prevStoryId?: string | null,
+      createdAt: string,
+      lastAddedToAt: string,
+      name: string,
+      updatedAt: string,
     } | null,
     updatedAt: string,
+    storyStoryFragmentsId?: string | null,
   } | null,
 };
 
@@ -1671,17 +878,24 @@ export type OnDeleteStoryFragmentSubscription = {
   onDeleteStoryFragment?:  {
     __typename: "StoryFragment",
     id: string,
-    storyID: string,
-    prompt?: string | null,
     fragment: string,
-    prevId?: string | null,
     createdAt: string,
-    authorID: string,
-    Characters?:  {
-      __typename: "ModelStoryFragmentCharacterConnection",
-      nextToken?: string | null,
+    originType: string,
+    originId: string,
+    prevId?: string | null,
+    story?:  {
+      __typename: "Story",
+      id: string,
+      currentMessageId: string,
+      storyRootId: string,
+      prevStoryId?: string | null,
+      createdAt: string,
+      lastAddedToAt: string,
+      name: string,
+      updatedAt: string,
     } | null,
     updatedAt: string,
+    storyStoryFragmentsId?: string | null,
   } | null,
 };
 
@@ -1695,27 +909,19 @@ export type OnCreateStorySubscription = {
     id: string,
     currentMessageId: string,
     storyRootId: string,
-    StoryFragments?:  {
+    storyFragments?:  {
       __typename: "ModelStoryFragmentConnection",
       nextToken?: string | null,
     } | null,
     prevStoryId?: string | null,
     createdAt: string,
     lastAddedToAt: string,
-    Author:  {
-      __typename: "Author",
-      id: string,
-      name: string,
-      createdAt: string,
-      updatedAt: string,
-    },
-    Characters?:  {
-      __typename: "ModelStoryCharacterConnection",
+    characters?:  {
+      __typename: "ModelCharacterConnection",
       nextToken?: string | null,
     } | null,
-    name?: string | null,
+    name: string,
     updatedAt: string,
-    storyAuthorId: string,
   } | null,
 };
 
@@ -1729,27 +935,19 @@ export type OnUpdateStorySubscription = {
     id: string,
     currentMessageId: string,
     storyRootId: string,
-    StoryFragments?:  {
+    storyFragments?:  {
       __typename: "ModelStoryFragmentConnection",
       nextToken?: string | null,
     } | null,
     prevStoryId?: string | null,
     createdAt: string,
     lastAddedToAt: string,
-    Author:  {
-      __typename: "Author",
-      id: string,
-      name: string,
-      createdAt: string,
-      updatedAt: string,
-    },
-    Characters?:  {
-      __typename: "ModelStoryCharacterConnection",
+    characters?:  {
+      __typename: "ModelCharacterConnection",
       nextToken?: string | null,
     } | null,
-    name?: string | null,
+    name: string,
     updatedAt: string,
-    storyAuthorId: string,
   } | null,
 };
 
@@ -1763,233 +961,18 @@ export type OnDeleteStorySubscription = {
     id: string,
     currentMessageId: string,
     storyRootId: string,
-    StoryFragments?:  {
+    storyFragments?:  {
       __typename: "ModelStoryFragmentConnection",
       nextToken?: string | null,
     } | null,
     prevStoryId?: string | null,
     createdAt: string,
     lastAddedToAt: string,
-    Author:  {
-      __typename: "Author",
-      id: string,
-      name: string,
-      createdAt: string,
-      updatedAt: string,
-    },
-    Characters?:  {
-      __typename: "ModelStoryCharacterConnection",
+    characters?:  {
+      __typename: "ModelCharacterConnection",
       nextToken?: string | null,
     } | null,
-    name?: string | null,
-    updatedAt: string,
-    storyAuthorId: string,
-  } | null,
-};
-
-export type OnCreateStoryCharacterSubscriptionVariables = {
-  filter?: ModelSubscriptionStoryCharacterFilterInput | null,
-};
-
-export type OnCreateStoryCharacterSubscription = {
-  onCreateStoryCharacter?:  {
-    __typename: "StoryCharacter",
-    id: string,
-    characterId: string,
-    storyId: string,
-    character:  {
-      __typename: "Character",
-      id: string,
-      name?: string | null,
-      authorID: string,
-      createdAt: string,
-      updatedAt: string,
-    },
-    story:  {
-      __typename: "Story",
-      id: string,
-      currentMessageId: string,
-      storyRootId: string,
-      prevStoryId?: string | null,
-      createdAt: string,
-      lastAddedToAt: string,
-      name?: string | null,
-      updatedAt: string,
-      storyAuthorId: string,
-    },
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnUpdateStoryCharacterSubscriptionVariables = {
-  filter?: ModelSubscriptionStoryCharacterFilterInput | null,
-};
-
-export type OnUpdateStoryCharacterSubscription = {
-  onUpdateStoryCharacter?:  {
-    __typename: "StoryCharacter",
-    id: string,
-    characterId: string,
-    storyId: string,
-    character:  {
-      __typename: "Character",
-      id: string,
-      name?: string | null,
-      authorID: string,
-      createdAt: string,
-      updatedAt: string,
-    },
-    story:  {
-      __typename: "Story",
-      id: string,
-      currentMessageId: string,
-      storyRootId: string,
-      prevStoryId?: string | null,
-      createdAt: string,
-      lastAddedToAt: string,
-      name?: string | null,
-      updatedAt: string,
-      storyAuthorId: string,
-    },
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnDeleteStoryCharacterSubscriptionVariables = {
-  filter?: ModelSubscriptionStoryCharacterFilterInput | null,
-};
-
-export type OnDeleteStoryCharacterSubscription = {
-  onDeleteStoryCharacter?:  {
-    __typename: "StoryCharacter",
-    id: string,
-    characterId: string,
-    storyId: string,
-    character:  {
-      __typename: "Character",
-      id: string,
-      name?: string | null,
-      authorID: string,
-      createdAt: string,
-      updatedAt: string,
-    },
-    story:  {
-      __typename: "Story",
-      id: string,
-      currentMessageId: string,
-      storyRootId: string,
-      prevStoryId?: string | null,
-      createdAt: string,
-      lastAddedToAt: string,
-      name?: string | null,
-      updatedAt: string,
-      storyAuthorId: string,
-    },
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnCreateStoryFragmentCharacterSubscriptionVariables = {
-  filter?: ModelSubscriptionStoryFragmentCharacterFilterInput | null,
-};
-
-export type OnCreateStoryFragmentCharacterSubscription = {
-  onCreateStoryFragmentCharacter?:  {
-    __typename: "StoryFragmentCharacter",
-    id: string,
-    characterId: string,
-    storyFragmentId: string,
-    character:  {
-      __typename: "Character",
-      id: string,
-      name?: string | null,
-      authorID: string,
-      createdAt: string,
-      updatedAt: string,
-    },
-    storyFragment:  {
-      __typename: "StoryFragment",
-      id: string,
-      storyID: string,
-      prompt?: string | null,
-      fragment: string,
-      prevId?: string | null,
-      createdAt: string,
-      authorID: string,
-      updatedAt: string,
-    },
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnUpdateStoryFragmentCharacterSubscriptionVariables = {
-  filter?: ModelSubscriptionStoryFragmentCharacterFilterInput | null,
-};
-
-export type OnUpdateStoryFragmentCharacterSubscription = {
-  onUpdateStoryFragmentCharacter?:  {
-    __typename: "StoryFragmentCharacter",
-    id: string,
-    characterId: string,
-    storyFragmentId: string,
-    character:  {
-      __typename: "Character",
-      id: string,
-      name?: string | null,
-      authorID: string,
-      createdAt: string,
-      updatedAt: string,
-    },
-    storyFragment:  {
-      __typename: "StoryFragment",
-      id: string,
-      storyID: string,
-      prompt?: string | null,
-      fragment: string,
-      prevId?: string | null,
-      createdAt: string,
-      authorID: string,
-      updatedAt: string,
-    },
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnDeleteStoryFragmentCharacterSubscriptionVariables = {
-  filter?: ModelSubscriptionStoryFragmentCharacterFilterInput | null,
-};
-
-export type OnDeleteStoryFragmentCharacterSubscription = {
-  onDeleteStoryFragmentCharacter?:  {
-    __typename: "StoryFragmentCharacter",
-    id: string,
-    characterId: string,
-    storyFragmentId: string,
-    character:  {
-      __typename: "Character",
-      id: string,
-      name?: string | null,
-      authorID: string,
-      createdAt: string,
-      updatedAt: string,
-    },
-    storyFragment:  {
-      __typename: "StoryFragment",
-      id: string,
-      storyID: string,
-      prompt?: string | null,
-      fragment: string,
-      prevId?: string | null,
-      createdAt: string,
-      authorID: string,
-      updatedAt: string,
-    },
-    createdAt: string,
+    name: string,
     updatedAt: string,
   } | null,
 };

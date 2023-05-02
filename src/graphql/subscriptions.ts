@@ -9,15 +9,21 @@ export const onCreateCharacter = /* GraphQL */ `
     onCreateCharacter(filter: $filter) {
       id
       name
-      authorID
-      storys {
-        nextToken
-      }
-      storyfragments {
-        nextToken
+      ownerId
+      ownerType
+      story {
+        id
+        currentMessageId
+        storyRootId
+        prevStoryId
+        createdAt
+        lastAddedToAt
+        name
+        updatedAt
       }
       createdAt
       updatedAt
+      storyCharactersId
     }
   }
 `;
@@ -28,15 +34,21 @@ export const onUpdateCharacter = /* GraphQL */ `
     onUpdateCharacter(filter: $filter) {
       id
       name
-      authorID
-      storys {
-        nextToken
-      }
-      storyfragments {
-        nextToken
+      ownerId
+      ownerType
+      story {
+        id
+        currentMessageId
+        storyRootId
+        prevStoryId
+        createdAt
+        lastAddedToAt
+        name
+        updatedAt
       }
       createdAt
       updatedAt
+      storyCharactersId
     }
   }
 `;
@@ -47,63 +59,21 @@ export const onDeleteCharacter = /* GraphQL */ `
     onDeleteCharacter(filter: $filter) {
       id
       name
-      authorID
-      storys {
-        nextToken
-      }
-      storyfragments {
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateAuthor = /* GraphQL */ `
-  subscription OnCreateAuthor($filter: ModelSubscriptionAuthorFilterInput) {
-    onCreateAuthor(filter: $filter) {
-      id
-      name
-      StoryFragments {
-        nextToken
-      }
-      Characters {
-        nextToken
+      ownerId
+      ownerType
+      story {
+        id
+        currentMessageId
+        storyRootId
+        prevStoryId
+        createdAt
+        lastAddedToAt
+        name
+        updatedAt
       }
       createdAt
       updatedAt
-    }
-  }
-`;
-export const onUpdateAuthor = /* GraphQL */ `
-  subscription OnUpdateAuthor($filter: ModelSubscriptionAuthorFilterInput) {
-    onUpdateAuthor(filter: $filter) {
-      id
-      name
-      StoryFragments {
-        nextToken
-      }
-      Characters {
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteAuthor = /* GraphQL */ `
-  subscription OnDeleteAuthor($filter: ModelSubscriptionAuthorFilterInput) {
-    onDeleteAuthor(filter: $filter) {
-      id
-      name
-      StoryFragments {
-        nextToken
-      }
-      Characters {
-        nextToken
-      }
-      createdAt
-      updatedAt
+      storyCharactersId
     }
   }
 `;
@@ -113,16 +83,23 @@ export const onCreateStoryFragment = /* GraphQL */ `
   ) {
     onCreateStoryFragment(filter: $filter) {
       id
-      storyID
-      prompt
       fragment
-      prevId
       createdAt
-      authorID
-      Characters {
-        nextToken
+      originType
+      originId
+      prevId
+      story {
+        id
+        currentMessageId
+        storyRootId
+        prevStoryId
+        createdAt
+        lastAddedToAt
+        name
+        updatedAt
       }
       updatedAt
+      storyStoryFragmentsId
     }
   }
 `;
@@ -132,16 +109,23 @@ export const onUpdateStoryFragment = /* GraphQL */ `
   ) {
     onUpdateStoryFragment(filter: $filter) {
       id
-      storyID
-      prompt
       fragment
-      prevId
       createdAt
-      authorID
-      Characters {
-        nextToken
+      originType
+      originId
+      prevId
+      story {
+        id
+        currentMessageId
+        storyRootId
+        prevStoryId
+        createdAt
+        lastAddedToAt
+        name
+        updatedAt
       }
       updatedAt
+      storyStoryFragmentsId
     }
   }
 `;
@@ -151,16 +135,23 @@ export const onDeleteStoryFragment = /* GraphQL */ `
   ) {
     onDeleteStoryFragment(filter: $filter) {
       id
-      storyID
-      prompt
       fragment
-      prevId
       createdAt
-      authorID
-      Characters {
-        nextToken
+      originType
+      originId
+      prevId
+      story {
+        id
+        currentMessageId
+        storyRootId
+        prevStoryId
+        createdAt
+        lastAddedToAt
+        name
+        updatedAt
       }
       updatedAt
+      storyStoryFragmentsId
     }
   }
 `;
@@ -170,24 +161,17 @@ export const onCreateStory = /* GraphQL */ `
       id
       currentMessageId
       storyRootId
-      StoryFragments {
+      storyFragments {
         nextToken
       }
       prevStoryId
       createdAt
       lastAddedToAt
-      Author {
-        id
-        name
-        createdAt
-        updatedAt
-      }
-      Characters {
+      characters {
         nextToken
       }
       name
       updatedAt
-      storyAuthorId
     }
   }
 `;
@@ -197,24 +181,17 @@ export const onUpdateStory = /* GraphQL */ `
       id
       currentMessageId
       storyRootId
-      StoryFragments {
+      storyFragments {
         nextToken
       }
       prevStoryId
       createdAt
       lastAddedToAt
-      Author {
-        id
-        name
-        createdAt
-        updatedAt
-      }
-      Characters {
+      characters {
         nextToken
       }
       name
       updatedAt
-      storyAuthorId
     }
   }
 `;
@@ -224,206 +201,16 @@ export const onDeleteStory = /* GraphQL */ `
       id
       currentMessageId
       storyRootId
-      StoryFragments {
+      storyFragments {
         nextToken
       }
       prevStoryId
       createdAt
       lastAddedToAt
-      Author {
-        id
-        name
-        createdAt
-        updatedAt
-      }
-      Characters {
+      characters {
         nextToken
       }
       name
-      updatedAt
-      storyAuthorId
-    }
-  }
-`;
-export const onCreateStoryCharacter = /* GraphQL */ `
-  subscription OnCreateStoryCharacter(
-    $filter: ModelSubscriptionStoryCharacterFilterInput
-  ) {
-    onCreateStoryCharacter(filter: $filter) {
-      id
-      characterId
-      storyId
-      character {
-        id
-        name
-        authorID
-        createdAt
-        updatedAt
-      }
-      story {
-        id
-        currentMessageId
-        storyRootId
-        prevStoryId
-        createdAt
-        lastAddedToAt
-        name
-        updatedAt
-        storyAuthorId
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateStoryCharacter = /* GraphQL */ `
-  subscription OnUpdateStoryCharacter(
-    $filter: ModelSubscriptionStoryCharacterFilterInput
-  ) {
-    onUpdateStoryCharacter(filter: $filter) {
-      id
-      characterId
-      storyId
-      character {
-        id
-        name
-        authorID
-        createdAt
-        updatedAt
-      }
-      story {
-        id
-        currentMessageId
-        storyRootId
-        prevStoryId
-        createdAt
-        lastAddedToAt
-        name
-        updatedAt
-        storyAuthorId
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteStoryCharacter = /* GraphQL */ `
-  subscription OnDeleteStoryCharacter(
-    $filter: ModelSubscriptionStoryCharacterFilterInput
-  ) {
-    onDeleteStoryCharacter(filter: $filter) {
-      id
-      characterId
-      storyId
-      character {
-        id
-        name
-        authorID
-        createdAt
-        updatedAt
-      }
-      story {
-        id
-        currentMessageId
-        storyRootId
-        prevStoryId
-        createdAt
-        lastAddedToAt
-        name
-        updatedAt
-        storyAuthorId
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateStoryFragmentCharacter = /* GraphQL */ `
-  subscription OnCreateStoryFragmentCharacter(
-    $filter: ModelSubscriptionStoryFragmentCharacterFilterInput
-  ) {
-    onCreateStoryFragmentCharacter(filter: $filter) {
-      id
-      characterId
-      storyFragmentId
-      character {
-        id
-        name
-        authorID
-        createdAt
-        updatedAt
-      }
-      storyFragment {
-        id
-        storyID
-        prompt
-        fragment
-        prevId
-        createdAt
-        authorID
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateStoryFragmentCharacter = /* GraphQL */ `
-  subscription OnUpdateStoryFragmentCharacter(
-    $filter: ModelSubscriptionStoryFragmentCharacterFilterInput
-  ) {
-    onUpdateStoryFragmentCharacter(filter: $filter) {
-      id
-      characterId
-      storyFragmentId
-      character {
-        id
-        name
-        authorID
-        createdAt
-        updatedAt
-      }
-      storyFragment {
-        id
-        storyID
-        prompt
-        fragment
-        prevId
-        createdAt
-        authorID
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteStoryFragmentCharacter = /* GraphQL */ `
-  subscription OnDeleteStoryFragmentCharacter(
-    $filter: ModelSubscriptionStoryFragmentCharacterFilterInput
-  ) {
-    onDeleteStoryFragmentCharacter(filter: $filter) {
-      id
-      characterId
-      storyFragmentId
-      character {
-        id
-        name
-        authorID
-        createdAt
-        updatedAt
-      }
-      storyFragment {
-        id
-        storyID
-        prompt
-        fragment
-        prevId
-        createdAt
-        authorID
-        updatedAt
-      }
-      createdAt
       updatedAt
     }
   }

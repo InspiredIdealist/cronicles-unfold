@@ -1,32 +1,24 @@
-import { GetCharacterQuery, ListCharactersQuery, ListStoriesQuery, ModelCharacterFilterInput } from '@/api/graphql';
-import { getCharacter, listCharacters, listStories } from '@/graphql/queries';
+import { ListStoriesQuery } from '@/api/graphql';
+import { listStories } from '@/graphql/queries';
 import StoryCard from '@/ui-components/StoryCard';
 import { GraphQLQuery } from '@aws-amplify/api';
 import { Flex } from '@aws-amplify/ui-react';
 import { API, withSSRContext } from 'aws-amplify';
 import { useRouter } from 'next/router';
-import { useEffect, useState, createContext } from 'react';
+import { useEffect, useState } from 'react';
 
 export async function getServerSideProps({ req }: any) {
 
     const { Auth } = withSSRContext({ req });
     const user = await Auth.currentAuthenticatedUser();
-    const character = await API.graphql<GraphQLQuery<ListCharactersQuery>>({
-        query: listCharacters,
-        variables: { authorID: user.attributes.sub } as ModelCharacterFilterInput
-    });
-
-    if (!character.data?.listCharacters?.items) {
-        return {
-            redirect: {
-                destination: "/characters/new"
-            }
-        };
-    }
 
     return {
-        // TODO: handle multiple characters
-        props: { character: character.data!.listCharacters!.items[0] }
+        props: {
+            character: {
+                id: user.attributes.sub,
+                name: user.attributes.preferred_username
+            }
+        }
     };
 }
 
@@ -48,7 +40,7 @@ export default function Stories({ character }: any) {
                 name={s.name}
                 count={"just me"}
                 description={"put something here"}
-                onClick={() => router.push(`/stories/${s.id}?character=${character.name}`)}
+                onClick={() => router.push(`/stories/${s.id}`)}
             />
         )
     });

@@ -1,4 +1,4 @@
-import { CreateStoryFragmentInput, CreateStoryFragmentMutation, CreateStoryInput, CreateStoryMutation, GetAuthorQuery } from "@/api/graphql";
+import { CreateStoryFragmentInput, CreateStoryFragmentMutation, CreateStoryInput, CreateStoryMutation } from "@/api/graphql";
 import { createStory, createStoryFragment } from "@/graphql/mutations";
 import { GraphQLQuery } from "@aws-amplify/api";
 import { Button, TextField } from "@aws-amplify/ui-react";
@@ -37,28 +37,39 @@ export default function NewStory({ author }: { author: { name: string, id: strin
                 input: {
                     name: story.name,
                     lastAddedToAt: new Date().toISOString(),
-                    storyAuthorId: author.id,
                     currentMessageId: genesisFragment.nextMessageId,
                     storyRootId: genesisFragment.nextMessageId
                 } as CreateStoryInput
             }
         });
 
-        const storyData = newStory.data?.createStory;
+        const storyData = newStory.data?.createStory!;
+
+        await API.graphql<GraphQLQuery<CreateStoryFragmentMutation>>({
+            query: createStoryFragment,
+            variables: {
+                input: {
+                    fragment: story.genesisPrompt,
+                    originId: author.id,
+                    originType: "Author",
+                    storyStoryFragmentsId: storyData.id
+                } as CreateStoryFragmentInput
+            }
+        });
 
         await API.graphql<GraphQLQuery<CreateStoryFragmentMutation>>({
             query: createStoryFragment,
             variables: {
                 input: {
                     fragment: genesisFragment.fragment,
-                    storyID: storyData?.id,
-                    prompt: story.genesisPrompt,
-                    authorID: author.id
-                }
+                    originId: author.id,
+                    originType: "Narrator",
+                    storyStoryFragmentsId: storyData.id
+                } as CreateStoryFragmentInput
             }
         });
 
-        router.push(`/stories/${storyData?.id}?character=${author.name}`);
+        router.push(`/stories/${storyData?.id}`);
     };
 
     return (

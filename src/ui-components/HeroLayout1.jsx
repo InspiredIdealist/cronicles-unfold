@@ -204,7 +204,7 @@ export default function HeroLayout1(props) {
             size="large"
             isDisabled={false}
             variation="primary"
-            children="Primary Button"
+            children="Select"
             onClick={onSelect}
             {...getOverrideProps(overrides, "Button")}
           ></Button>
