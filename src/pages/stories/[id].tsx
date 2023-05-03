@@ -41,6 +41,9 @@ export default function Storyline({ character }: any) {
                 const connState = payload.data.connectionState as ConnectionState;
                 console.log(connState);
             }
+            else {
+                console.log("got other event: " + payload.event);
+            }
         });
     });
 
