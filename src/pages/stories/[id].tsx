@@ -22,7 +22,8 @@ export async function getServerSideProps({ req }: any) {
     return {
         props: {
             character
-        }
+        },
+        revalidate: 10
     };
 }
 
@@ -32,7 +33,6 @@ export default function Storyline({ character }: any) {
     const [story, setStory] = useState<any>();
     const [fragments, setFragments] = useState<any[]>([]);
     const [prompt, setPrompt] = useState<string>("");
-    const [characters, setCharacters] = useState<any[]>([]);
 
     useEffect(() => {
         if (id) {
@@ -86,11 +86,6 @@ export default function Storyline({ character }: any) {
         }
     }, [id]);
 
-    const charMap = new Map<string, string>();
-    characters.forEach(c => {
-        charMap.set(c.id, c.name);
-    });
-
     const frags = fragments?.sort((a, b) => a.createdAt > b.createdAt ? 1 : -1).map((frag) => (
         <View
             key={frag?.id}
@@ -101,7 +96,7 @@ export default function Storyline({ character }: any) {
             maxWidth="100%"
             padding="1rem"
         >
-            <div >{frag?.originType}: {frag?.fragment}</div>
+            <div >{frag?.originId === character.id ? "You" : frag?.originType}: {frag?.fragment}</div>
         </View>
     ));
 
@@ -129,8 +124,10 @@ export default function Storyline({ character }: any) {
                 >
                     <form onSubmit={async (e) => {
                         e.preventDefault();
-                        await tellATale(story, prompt, character, story.characters);
-                        setPrompt("");
+                        if (prompt && prompt.trim()) {
+                            await tellATale(story, prompt.trim(), character, story.characters);
+                            setPrompt("");
+                        }
                     }}>
                         <p>fragments: {fragments.length}</p>
                         <TextField
