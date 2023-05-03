@@ -1,7 +1,7 @@
-import { publicProcedure, router } from './trpc';
+import { procedure, router } from './trpc';
 
 const appRouter = router({
-    userList: publicProcedure
+    userList: procedure
         .query(async () => {
             // Retrieve users from a datasource, this is an imaginary database
             return null;
