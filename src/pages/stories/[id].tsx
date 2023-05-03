@@ -85,15 +85,12 @@ export default function Storyline({ character }: any) {
     useEffect(() => {
 
         const subscription = API.graphql<GraphQLSubscription<OnCreateStoryFragmentSubscription>>({
-            query: onCreateStoryFragment,
-            variables: {
-                filter: {}
-            }
+            query: onCreateStoryFragment
         });
 
         const token = subscription.subscribe(({ value }) => {
+            console.log("MAYBE ADD FRAGMENT to " + JSON.stringify(value));
             const data = value.data?.onCreateStoryFragment;
-            console.log("MAYBE ADD FRAGMENT to " + JSON.stringify(data));
             if (data && data.story?.id === id) {
                 console.log("ADDING FRAGMENT");
                 setFragments(f => [...f, data]);
