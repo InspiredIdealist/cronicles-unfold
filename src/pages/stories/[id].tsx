@@ -156,8 +156,9 @@ export default function Storyline({ character }: any) {
                     <form onSubmit={async (e) => {
                         e.preventDefault();
                         if (prompt && prompt.trim()) {
-                            await tellATale(story, prompt.trim(), character, story.characters);
+                            const resp = await tellATale(story, prompt.trim(), character, story.characters);
                             setPrompt("");
+                            setFragments(f => [...f, resp.prompt?.data, resp.fragResp?.data]);
                         }
                     }}>
                         <p>fragments: {fragments.length}</p>
