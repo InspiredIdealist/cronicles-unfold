@@ -42,7 +42,7 @@ export default function Storyline({ character }: any) {
                 console.log(connState);
             }
         });
-    }, [id]);
+    });
 
     useEffect(() => {
         if (id) {
@@ -76,32 +76,37 @@ export default function Storyline({ character }: any) {
                     }
                     setFragments(fragments as any[]);
                 })
-
-            const subscription = API.graphql<GraphQLSubscription<OnCreateStoryFragmentSubscription>>({
-                query: onCreateStoryFragment,
-                variables: {
-                    filter: {}
-                }
-            });
-
-            const token = subscription.subscribe(({ value }) => {
-                const data = value.data?.onCreateStoryFragment;
-                console.log("MAYBE ADD FRAGMENT to " + JSON.stringify(data));
-                if (data && data.story?.id === id) {
-                    console.log("ADDING FRAGMENT");
-                    setFragments(f => [...f, data]);
-                }
-            }, err => { console.log(err) }, () => { console.log("done subscription") });
-
-            console.log("subscription begun!");
-
-            // this ensures that only one subscription is kept at a time
-            return () => {
-                console.log("terminating subscription");
-                token.unsubscribe();
-            };
         }
     }, [id]);
+
+    useEffect(() => {
+
+        const subscription = API.graphql<GraphQLSubscription<OnCreateStoryFragmentSubscription>>({
+            query: onCreateStoryFragment,
+            variables: {
+                filter: {}
+            }
+        });
+
+        const token = subscription.subscribe(({ value }) => {
+            const data = value.data?.onCreateStoryFragment;
+            console.log("MAYBE ADD FRAGMENT to " + JSON.stringify(data));
+            if (data && data.story?.id === id) {
+                console.log("ADDING FRAGMENT");
+                setFragments(f => [...f, data]);
+            }
+        }, err => { console.log(err) }, () => { console.log("done subscription") });
+
+        console.log("subscription begun and is closed: " + token.closed);
+
+        // this ensures that only one subscription is kept at a time
+        return () => {
+            console.log("terminating subscription");
+            token.unsubscribe();
+        };
+
+    }, [id]);
+
 
     const frags = fragments?.sort((a, b) => a.createdAt > b.createdAt ? 1 : -1).map((frag) => (
         <View
