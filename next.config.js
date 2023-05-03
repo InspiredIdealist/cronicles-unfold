@@ -5,6 +5,11 @@ const nextConfig = {
         config.experiments = { asyncWebAssembly: true, layers: true };
 
         return config;
+    },
+    generateEtags: false,
+    poweredByHeader: false,
+    devIndicators: {
+        autoPrerender: false
     }
 }
 

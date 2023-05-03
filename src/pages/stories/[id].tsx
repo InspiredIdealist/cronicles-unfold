@@ -2,7 +2,7 @@ import { Button, Divider, FieldGroupIcon, Flex, Heading, TextField, View } from 
 import { API, withSSRContext } from 'aws-amplify';
 import { GraphQLQuery, GraphQLSubscription } from '@aws-amplify/api';
 import { GetStoryQuery, ListStoryFragmentsQuery, ModelStoryFragmentFilterInput, OnCreateStoryFragmentSubscription } from '@/api/graphql';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import { getStory, listStoryFragments } from '@/graphql/queries';
 import { tellATale } from '../api/bot';
@@ -22,8 +22,7 @@ export async function getServerSideProps({ req }: any) {
     return {
         props: {
             character
-        },
-        revalidate: 10
+        }
     };
 }
 
@@ -100,7 +99,10 @@ export default function Storyline({ character }: any) {
         </View>
     ));
 
-    setTimeout(() => window.scrollTo(0, document.body.scrollHeight));
+    const bottomRef = useRef<HTMLDivElement>(null);
+    useEffect(() => {
+        bottomRef.current?.scrollIntoView()
+    }, [fragments]);
 
     return (
         <>
@@ -149,6 +151,7 @@ export default function Storyline({ character }: any) {
                     </form>
                 </View>
             </Flex>
+            <div ref={bottomRef}></div>
         </>
     );
 }
