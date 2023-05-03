@@ -75,9 +75,10 @@ export default function Storyline({ character }: any) {
 
             const token = subscription.subscribe(({ value }) => {
                 const data = value.data?.onCreateStoryFragment;
+                console.log("MAYBE ADD FRAGMENT to " + JSON.stringify(data));
                 if (data && data.story?.id === id) {
                     console.log("ADDING FRAGMENT");
-                    setFragments(f => f.concat([data]));
+                    setFragments(f => [...f, data]);
                 }
             });
 
