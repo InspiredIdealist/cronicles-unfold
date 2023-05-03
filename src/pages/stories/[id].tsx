@@ -41,9 +41,6 @@ export default function Storyline({ character }: any) {
                 const connState = payload.data.connectionState as ConnectionState;
                 console.log(connState);
             }
-            else {
-                console.log("got other event: " + payload.event);
-            }
         });
     });
 
@@ -89,15 +86,11 @@ export default function Storyline({ character }: any) {
         );
 
         const token = subscription.subscribe(({ value }) => {
-            console.log("MAYBE ADD FRAGMENT to " + JSON.stringify(value));
             const data = value.data?.onCreateStoryFragment;
             if (data && data.story?.id === id) {
-                console.log("ADDING FRAGMENT");
                 setFragments(f => [...f, data]);
             }
-        }, err => { console.log(err) }, () => { console.log("done subscription") });
-
-        console.log("subscription begun and is closed: " + token.closed);
+        });
 
         // this ensures that only one subscription is kept at a time
         return () => {
@@ -150,9 +143,8 @@ export default function Storyline({ character }: any) {
                     <form onSubmit={async (e) => {
                         e.preventDefault();
                         if (prompt && prompt.trim()) {
-                            const resp = await tellATale(story, prompt.trim(), character, story.characters);
+                            await tellATale(story, prompt.trim(), character, story.characters);
                             setPrompt("");
-                            setFragments(f => [...f, resp.prompt?.data?.createStoryFragment, resp.fragResp?.data?.createStoryFragment]);
                         }
                     }}>
                         <p>fragments: {fragments.length}</p>

@@ -51,7 +51,7 @@ export async function tellATale(story: any, hint: string, character: { id: strin
 
     const { fragment, nextMessageId } = await ask(hint, character.name, characters, story.messageId);
 
-    const promptResp = await API.graphql<GraphQLQuery<CreateStoryFragmentMutation>>({
+    await API.graphql<GraphQLQuery<CreateStoryFragmentMutation>>({
         query: createStoryFragment,
         variables: {
             input: {
@@ -63,7 +63,7 @@ export async function tellATale(story: any, hint: string, character: { id: strin
         }
     });
 
-    const fragResp = await API.graphql<GraphQLQuery<CreateStoryFragmentMutation>>({
+    await API.graphql<GraphQLQuery<CreateStoryFragmentMutation>>({
         query: createStoryFragment,
         variables: {
             input: {
@@ -74,9 +74,4 @@ export async function tellATale(story: any, hint: string, character: { id: strin
             }
         }
     });
-
-    return {
-        prompt: promptResp,
-        fragResp: fragResp
-    }
 }
