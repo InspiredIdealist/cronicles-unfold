@@ -158,7 +158,7 @@ export default function Storyline({ character }: any) {
                         if (prompt && prompt.trim()) {
                             const resp = await tellATale(story, prompt.trim(), character, story.characters);
                             setPrompt("");
-                            setFragments(f => [...f, resp.prompt?.data, resp.fragResp?.data]);
+                            setFragments(f => [...f, resp.prompt?.data?.createStoryFragment, resp.fragResp?.data?.createStoryFragment]);
                         }
                     }}>
                         <p>fragments: {fragments.length}</p>

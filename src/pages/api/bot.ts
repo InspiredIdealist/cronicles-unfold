@@ -1,4 +1,4 @@
-import { CreateStoryFragmentInput } from '@/api/graphql';
+import { CreateStoryFragmentInput, CreateStoryFragmentMutation } from '@/api/graphql';
 import { createStoryFragment } from '@/graphql/mutations';
 import { GraphQLQuery } from '@aws-amplify/api';
 import { API } from 'aws-amplify';
@@ -51,7 +51,7 @@ export async function tellATale(story: any, hint: string, character: { id: strin
 
     const { fragment, nextMessageId } = await ask(hint, character.name, characters, story.messageId);
 
-    const promptResp = await API.graphql<GraphQLQuery<CreateStoryFragmentInput>>({
+    const promptResp = await API.graphql<GraphQLQuery<CreateStoryFragmentMutation>>({
         query: createStoryFragment,
         variables: {
             input: {
@@ -63,7 +63,7 @@ export async function tellATale(story: any, hint: string, character: { id: strin
         }
     });
 
-    const fragResp = await API.graphql<GraphQLQuery<CreateStoryFragmentInput>>({
+    const fragResp = await API.graphql<GraphQLQuery<CreateStoryFragmentMutation>>({
         query: createStoryFragment,
         variables: {
             input: {
