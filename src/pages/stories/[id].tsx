@@ -80,7 +80,7 @@ export default function Storyline({ character }: any) {
                     console.log("ADDING FRAGMENT");
                     setFragments(f => [...f, data]);
                 }
-            });
+            }, err => { console.log(err) }, () => { console.log("done subscription") });
 
             console.log("subscription begun!");
 
