@@ -1,5 +1,6 @@
 import { Button, Divider, FieldGroupIcon, Flex, Heading, TextField, View } from '@aws-amplify/ui-react';
-import { API, withSSRContext } from 'aws-amplify';
+import { CONNECTION_STATE_CHANGE, ConnectionState } from '@aws-amplify/pubsub';
+import { API, Hub, withSSRContext } from 'aws-amplify';
 import { GraphQLQuery, GraphQLSubscription } from '@aws-amplify/api';
 import { GetStoryQuery, ListStoryFragmentsQuery, ModelStoryFragmentFilterInput, OnCreateStoryFragmentSubscription } from '@/api/graphql';
 import { useEffect, useRef, useState } from 'react';
@@ -32,6 +33,16 @@ export default function Storyline({ character }: any) {
     const [story, setStory] = useState<any>();
     const [fragments, setFragments] = useState<any[]>([]);
     const [prompt, setPrompt] = useState<string>("");
+
+    useEffect(() => {
+        Hub.listen('api', (data: any) => {
+            const { payload } = data;
+            if (payload.event === CONNECTION_STATE_CHANGE) {
+                const connState = payload.data.connectionState as ConnectionState;
+                console.log(connState);
+            }
+        });
+    }, [id]);
 
     useEffect(() => {
         if (id) {
