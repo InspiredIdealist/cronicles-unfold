@@ -82,8 +82,13 @@ export default function Storyline({ character }: any) {
                 }
             });
 
+            console.log("subscription begun!");
+
             // this ensures that only one subscription is kept at a time
-            return token.unsubscribe.bind(token);
+            return () => {
+                console.log("terminating subscription");
+                token.unsubscribe();
+            };
         }
     }, [id]);
 
