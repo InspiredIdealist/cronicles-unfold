@@ -76,6 +76,7 @@ export default function Storyline({ character }: any) {
             const token = subscription.subscribe(({ value }) => {
                 const data = value.data?.onCreateStoryFragment;
                 if (data && data.story?.id === id) {
+                    console.log("ADDING FRAGMENT");
                     setFragments(f => f.concat([data]));
                 }
             });
@@ -103,6 +104,9 @@ export default function Storyline({ character }: any) {
     useEffect(() => {
         bottomRef.current?.scrollIntoView()
     }, [fragments]);
+
+
+    console.log("REPAINTING SCREEN");
 
     return (
         <>
