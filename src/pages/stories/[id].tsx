@@ -65,7 +65,6 @@ export default function Storyline({ character }: any) {
                         nextToken = nextResp.data?.listStoryFragments?.nextToken;
                     }
                     setFragments(fragments as any[]);
-                    window.scrollTo(0, document.body.scrollHeight);
                 })
 
             const subscription = API.graphql<GraphQLSubscription<OnCreateStoryFragmentSubscription>>({
@@ -79,7 +78,6 @@ export default function Storyline({ character }: any) {
                 const data = value.data?.onCreateStoryFragment;
                 if (data && data.story?.id === id) {
                     setFragments(f => f.concat([data]));
-                    window.scrollTo(0, document.body.scrollHeight);
                 }
             });
 
@@ -107,6 +105,7 @@ export default function Storyline({ character }: any) {
         </View>
     ));
 
+    setTimeout(() => window.scrollTo(0, document.body.scrollHeight));
 
     return (
         <>
