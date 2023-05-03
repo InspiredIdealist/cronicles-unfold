@@ -31,20 +31,20 @@ export async function getPosts() {
     return postsJson;
 }
 
-export async function ask(hint: string, character: string, characters: string[], messageId?: string | null) {
+export async function ask(hint: string, character: string, characters: string[], messageId?: string | undefined) {
 
-    //const api = new ChatGPTAPI({
-    //    apiKey: process.env["OPENAI_API_KEY"]!
-    //});
+    const api = new ChatGPTAPI({
+        apiKey: process.env["OPENAI_API_KEY"]!
+    });
 
-    //const resp = await api.sendMessage(hint, {
-    //    systemMessage: metaPromptFor(character, characters),
-    //    parentMessageId: messageId
-    //});
+    const resp = await api.sendMessage(hint, {
+        systemMessage: metaPromptFor(character, characters),
+        parentMessageId: messageId
+    });
 
-    //return resp.text;
+    return { fragment: resp.text, nextMessageId: resp.id };
 
-    return { fragment: hint.split("").reverse().join(""), nextMessageId: (Math.random() * 100000).toString() };
+    //return { fragment: hint.split("").reverse().join(""), nextMessageId: (Math.random() * 100000).toString() };
 }
 
 export async function tellATale(story: any, hint: string, character: { id: string, name: string }, characters: string[]) {
