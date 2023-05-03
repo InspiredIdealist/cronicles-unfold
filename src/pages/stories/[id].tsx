@@ -1,7 +1,7 @@
 import { Button, Divider, FieldGroupIcon, Flex, Heading, TextField, View } from '@aws-amplify/ui-react';
 import { CONNECTION_STATE_CHANGE, ConnectionState } from '@aws-amplify/pubsub';
 import { API, Hub, withSSRContext } from 'aws-amplify';
-import { GraphQLQuery, GraphQLSubscription } from '@aws-amplify/api';
+import { GraphQLQuery, GraphQLSubscription, graphqlOperation } from '@aws-amplify/api';
 import { GetStoryQuery, ListStoryFragmentsQuery, ModelStoryFragmentFilterInput, OnCreateStoryFragmentSubscription } from '@/api/graphql';
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
@@ -84,9 +84,9 @@ export default function Storyline({ character }: any) {
 
     useEffect(() => {
 
-        const subscription = API.graphql<GraphQLSubscription<OnCreateStoryFragmentSubscription>>({
-            query: onCreateStoryFragment
-        });
+        const subscription = API.graphql<GraphQLSubscription<OnCreateStoryFragmentSubscription>>(
+            graphqlOperation(onCreateStoryFragment)
+        );
 
         const token = subscription.subscribe(({ value }) => {
             console.log("MAYBE ADD FRAGMENT to " + JSON.stringify(value));
@@ -126,9 +126,6 @@ export default function Storyline({ character }: any) {
     useEffect(() => {
         bottomRef.current?.scrollIntoView()
     }, [fragments]);
-
-
-    console.log("REPAINTING SCREEN");
 
     return (
         <>
