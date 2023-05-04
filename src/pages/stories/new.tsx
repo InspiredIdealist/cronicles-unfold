@@ -28,7 +28,6 @@ export default function NewStory({ author }: { author: { name: string, id: strin
 
     const submit = async () => {
 
-
         const newStory = await API.graphql<GraphQLQuery<CreateStoryMutation>>({
             query: createStory,
             variables: {
@@ -36,27 +35,15 @@ export default function NewStory({ author }: { author: { name: string, id: strin
                     name: story.name,
                     lastAddedToAt: new Date().toISOString(),
                     // TODO: eliminate these useless fields
-                    currentMessageId: '',
-                    storyRootId: ''
+                    currentMessageId: '1111',
+                    storyRootId: '111'
                 } as CreateStoryInput
             }
         });
 
         const storyData = newStory.data?.createStory!;
 
-        await API.graphql<GraphQLQuery<CreateStoryFragmentMutation>>({
-            query: createStoryFragment,
-            variables: {
-                input: {
-                    fragment: story.genesisPrompt,
-                    originId: author.id,
-                    originType: "Author",
-                    storyStoryFragmentsId: storyData.id
-                } as CreateStoryFragmentInput
-            }
-        });
-
-        const botResp = await fetch("/api/bot", {
+        await fetch("/api/bot", {
             method: "POST",
             body: JSON.stringify({
                 hint: story.genesisPrompt,
@@ -67,20 +54,6 @@ export default function NewStory({ author }: { author: { name: string, id: strin
                 },
                 story: storyData
             })
-        });
-
-        const { fragment, nextMessageId } = await botResp.json();
-
-        await API.graphql<GraphQLQuery<CreateStoryFragmentMutation>>({
-            query: createStoryFragment,
-            variables: {
-                input: {
-                    fragment: fragment,
-                    originId: nextMessageId,
-                    originType: "Narrator",
-                    storyStoryFragmentsId: storyData.id
-                } as CreateStoryFragmentInput
-            }
         });
 
         router.push(`/stories/${storyData?.id}`);
