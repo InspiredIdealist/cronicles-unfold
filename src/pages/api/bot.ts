@@ -21,7 +21,7 @@ export default async function handler(
     const { hint, origin, messageId, story } = JSON.parse(req.body);
 
     const api = new ChatGPTAPI({
-        apiKey: process.env['OPENAI_API_KEY']!
+        apiKey: "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"
     });
 
     const resp = await api.sendMessage(hint, {
