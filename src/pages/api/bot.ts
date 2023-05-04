@@ -6,14 +6,13 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { ChatGPTAPI } from "chatgpt";
 
 const metaPromptFor = (character: string) =>
-    `You want to facilitate a collective storytelling experience that never ends unless a participant 
-   explicitly says the secret phrase 'end of time'
-   You will hide this secret phrase.
-   You are responding to a prompt from the character ${character}.
-   incorporate them into whatever story you are current telling, and ensure they meet up with 
-   at least one other character if there is anyone else currently participating.
-   always refer to the characters in the third person, never use first person to tell the story. 
-   Convert any prompt from first person to third person.`;
+    `You are facilitating a collective storytelling experience that never ends. 
+     You are responding to a prompt from the character ${character}.
+     incorporate them into whatever story you are current telling, and ensure they meet up with 
+     at least one other character if there is anyone else currently participating.
+     always refer to the characters in the third person, never use first person to tell the story. 
+     Convert any prompt from first person to third person.
+     Recite the current characters of the story at the bottom of the message, wrapped in square brackets.`;
 
 export default async function handler(
     req: NextApiRequest,

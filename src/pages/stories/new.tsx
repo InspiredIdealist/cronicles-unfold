@@ -14,7 +14,7 @@ export async function getServerSideProps({ req }: any) {
     return {
         props: {
             author: {
-                name: user.username,
+                name: user.attributes.preferred_username,
                 id: user.attributes.sub
             }
         }
