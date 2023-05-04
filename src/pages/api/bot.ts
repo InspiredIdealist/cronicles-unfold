@@ -1,11 +1,9 @@
-import { CreateStoryFragmentMutation, ListStoryFragmentsQuery } from '@/api/graphql';
+import { CreateStoryFragmentMutation } from '@/api/graphql';
 import { createStoryFragment } from '@/graphql/mutations';
 import { GraphQLQuery } from '@aws-amplify/api';
 import { API } from 'aws-amplify';
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { ChatGPTAPI } from "chatgpt";
-import { listStoryFragments } from '@/graphql/queries';
-import Keyv from 'keyv';
 
 const metaPrompt =
     `You are a narrator, telling an ever evolving, never ending story using the prompts given to you by various participants as inspiration.
