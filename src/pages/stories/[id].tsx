@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import { getStory, listStoryFragments } from '@/graphql/queries';
 import { onCreateStoryFragment } from '@/graphql/subscriptions';
+import Head from 'next/head';
 
 
 export async function getServerSideProps({ req }: any) {
@@ -120,6 +121,9 @@ export default function Storyline({ character }: any) {
 
     return (
         <>
+            <Head>
+                <title>{story?.name}</title>
+            </Head>
             <Flex direction="column" gap="8rem">
                 <Heading style={{ textAlign: "center" }} level={1}>{story?.name}</Heading>
                 <Divider orientation='horizontal' />
