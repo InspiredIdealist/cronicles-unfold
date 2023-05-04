@@ -1,18 +1,21 @@
-import { CreateStoryFragmentMutation } from '@/api/graphql';
+import { CreateStoryFragmentMutation, ListStoryFragmentsQuery } from '@/api/graphql';
 import { createStoryFragment } from '@/graphql/mutations';
 import { GraphQLQuery } from '@aws-amplify/api';
 import { API } from 'aws-amplify';
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { ChatGPTAPI } from "chatgpt";
+import { listStoryFragments } from '@/graphql/queries';
+import Keyv from 'keyv';
 
-const metaPromptFor = (character: string) =>
-    `You are facilitating a collective storytelling experience that never ends. 
-     You are responding to a prompt from the character ${character}.
+const metaPrompt =
+    `You are a narrator, telling an ever evolving, never ending story using the prompts given to you by various participants as inspiration.
      incorporate them into whatever story you are current telling, and ensure they meet up with 
      at least one other character if there is anyone else currently participating.
      always refer to the characters in the third person, never use first person to tell the story. 
-     Convert any prompt from first person to third person.
-     Recite the current characters of the story at the bottom of the message, wrapped in square brackets.`;
+     always use the name of the person who gave you the prompt.
+     Convert any prompt from first person to third person.`.replace(/[\n\s]+/g, " ");
+
+const chatbots = new Map<string, ChatGPTAPI>();
 
 export default async function handler(
     req: NextApiRequest,
@@ -20,15 +23,23 @@ export default async function handler(
 ) {
     const { hint, origin, messageId, story } = JSON.parse(req.body);
 
-    const api = new ChatGPTAPI({
-        apiKey: "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"
-    });
 
-    const resp = await api.sendMessage(hint, {
-        systemMessage: metaPromptFor(origin.name),
+    const message = {
+        name: origin.name,
         parentMessageId: messageId,
         conversationId: story?.id
-    });
+    }
+
+    if (!chatbots.has(story?.id)) {
+        const api = new ChatGPTAPI({
+            systemMessage: metaPrompt,
+            apiKey: "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"
+        });
+
+        chatbots.set(story?.id, api);
+    }
+
+    const resp = await chatbots.get(story?.id)!.sendMessage(hint, message);
 
     const fragment = resp.text;
     const nextMessageId = resp.id;
@@ -58,6 +69,6 @@ export default async function handler(
     });
 
     res.status(201).json(
-        { fragment: resp.text, nextMessageId: resp.id }
+        { fragment: resp.text, nextMessageId }
     );
 }

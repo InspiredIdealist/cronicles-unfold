@@ -141,7 +141,7 @@ export default function Storyline({ character }: any) {
                     <form onSubmit={async (e) => {
                         e.preventDefault();
                         if (prompt && prompt.trim()) {
-                            const messageId = fragments.findLast(f => f.originType === "Narrator");
+                            const message = fragments.findLast(f => f.originType === "Narrator");
                             await fetch("/api/bot", {
                                 method: "POST",
                                 body: JSON.stringify({
@@ -152,7 +152,7 @@ export default function Storyline({ character }: any) {
                                         name: character.name
                                     },
                                     story,
-                                    messageId: messageId.originId
+                                    messageId: message.originId
                                 })
                             });
                             setPrompt("");
