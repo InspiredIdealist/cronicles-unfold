@@ -26,7 +26,8 @@ export default async function handler(
 
     const resp = await api.sendMessage(hint, {
         systemMessage: metaPromptFor(origin.name),
-        parentMessageId: messageId
+        parentMessageId: messageId,
+        conversationId: story?.id
     });
 
     const fragment = resp.text;
