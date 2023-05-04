@@ -33,7 +33,7 @@ export default async function handler(
     if (!chatbots.has(story?.id)) {
         const api = new ChatGPTAPI({
             systemMessage: metaPrompt,
-            apiKey: "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"
+            apiKey: process.env.OPENAI_API_KEY!
         });
 
         chatbots.set(story?.id, api);
