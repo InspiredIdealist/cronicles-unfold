@@ -4,7 +4,6 @@ import { GraphQLQuery } from "@aws-amplify/api";
 import { Button, TextField } from "@aws-amplify/ui-react";
 import { API, withSSRContext } from "aws-amplify";
 import { useState } from "react";
-import { ask } from "../api/bot";
 import { useRouter } from "next/router";
 
 export async function getServerSideProps({ req }: any) {
@@ -29,7 +28,6 @@ export default function NewStory({ author }: { author: { name: string, id: strin
 
     const submit = async () => {
 
-        const genesisFragment = await ask(story.genesisPrompt!, author.name!, [author.name!]);
 
         const newStory = await API.graphql<GraphQLQuery<CreateStoryMutation>>({
             query: createStory,
@@ -37,8 +35,9 @@ export default function NewStory({ author }: { author: { name: string, id: strin
                 input: {
                     name: story.name,
                     lastAddedToAt: new Date().toISOString(),
-                    currentMessageId: genesisFragment.nextMessageId,
-                    storyRootId: genesisFragment.nextMessageId
+                    // TODO: eliminate these useless fields
+                    currentMessageId: '',
+                    storyRootId: ''
                 } as CreateStoryInput
             }
         });
@@ -57,12 +56,27 @@ export default function NewStory({ author }: { author: { name: string, id: strin
             }
         });
 
+        const botResp = await fetch("/api/bot", {
+            method: "POST",
+            body: JSON.stringify({
+                hint: story.genesisPrompt,
+                origin: {
+                    id: author.id,
+                    type: "Author",
+                    name: author.name
+                },
+                story: storyData
+            })
+        });
+
+        const { fragment, nextMessageId } = await botResp.json();
+
         await API.graphql<GraphQLQuery<CreateStoryFragmentMutation>>({
             query: createStoryFragment,
             variables: {
                 input: {
-                    fragment: genesisFragment.fragment,
-                    originId: author.id,
+                    fragment: fragment,
+                    originId: nextMessageId,
                     originType: "Narrator",
                     storyStoryFragmentsId: storyData.id
                 } as CreateStoryFragmentInput

@@ -6,7 +6,6 @@ import { GetStoryQuery, ListStoryFragmentsQuery, ModelStoryFragmentFilterInput, 
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import { getStory, listStoryFragments } from '@/graphql/queries';
-import { tellATale } from '../api/bot';
 import { onCreateStoryFragment } from '@/graphql/subscriptions';
 
 
@@ -107,7 +106,6 @@ export default function Storyline({ character }: any) {
             as="div"
             ariaLabel="View example"
             backgroundColor="var(--amplify-colors-white)"
-            height="3rem"
             maxWidth="100%"
             padding="1rem"
         >
@@ -143,7 +141,20 @@ export default function Storyline({ character }: any) {
                     <form onSubmit={async (e) => {
                         e.preventDefault();
                         if (prompt && prompt.trim()) {
-                            await tellATale(story, prompt.trim(), character, story.characters);
+                            const messageId = fragments.length > 0 ? fragments[fragments.length - 1].originId : undefined;
+                            await fetch("/api/bot", {
+                                method: "POST",
+                                body: JSON.stringify({
+                                    hint: prompt,
+                                    origin: {
+                                        id: character.id,
+                                        type: "Character",
+                                        name: character.name
+                                    },
+                                    story,
+                                    messageId
+                                })
+                            });
                             setPrompt("");
                         }
                     }}>
