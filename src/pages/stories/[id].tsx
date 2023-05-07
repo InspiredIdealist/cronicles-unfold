@@ -33,6 +33,7 @@ export default function Storyline({ character }: any) {
     const [story, setStory] = useState<any>();
     const [fragments, setFragments] = useState<any[]>([]);
     const [prompt, setPrompt] = useState<string>("");
+    const [promptEnabled, isPromptEnabled] = useState<boolean>(true);
 
     useEffect(() => {
         Hub.listen('api', (data: any) => {
@@ -145,20 +146,22 @@ export default function Storyline({ character }: any) {
                     <form onSubmit={async (e) => {
                         e.preventDefault();
                         if (prompt && prompt.trim()) {
-                            const message = fragments.findLast(f => f.originType === "Narrator");
-                            await fetch("/api/bot", {
+                            isPromptEnabled(false);
+                            await fetch(`/api/bot-v2/${story.id}`, {
                                 method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json"
+                                },
                                 body: JSON.stringify({
-                                    hint: prompt,
+                                    nextPrompt: prompt,
                                     origin: {
                                         id: character.id,
                                         type: "Character",
                                         name: character.name
-                                    },
-                                    story,
-                                    messageId: message.originId
+                                    }
                                 })
                             });
+                            isPromptEnabled(true);
                             setPrompt("");
                         }
                     }}>
@@ -169,6 +172,7 @@ export default function Storyline({ character }: any) {
                             onChange={e => setPrompt(e.target.value)}
                             type="text"
                             labelHidden={true}
+                            disabled={!promptEnabled}
                             placeholder={`so ${character.name}, what happened next?`}
                             innerStartComponent={
                                 <FieldGroupIcon>

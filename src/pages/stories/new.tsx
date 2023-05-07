@@ -43,10 +43,13 @@ export default function NewStory({ author }: { author: { name: string, id: strin
 
         const storyData = newStory.data?.createStory!;
 
-        await fetch("/api/bot", {
+        await fetch("/api/bot-v2", {
             method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
             body: JSON.stringify({
-                hint: story.genesisPrompt,
+                nextPrompt: story.genesisPrompt,
                 origin: {
                     id: author.id,
                     type: "Author",
