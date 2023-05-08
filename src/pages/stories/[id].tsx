@@ -1,6 +1,5 @@
 import { Button, Divider, FieldGroupIcon, Flex, Heading, TextField, View } from '@aws-amplify/ui-react';
-import { CONNECTION_STATE_CHANGE, ConnectionState } from '@aws-amplify/pubsub';
-import { API, Hub, withSSRContext } from 'aws-amplify';
+import { API, withSSRContext } from 'aws-amplify';
 import { GraphQLQuery, GraphQLSubscription, graphqlOperation } from '@aws-amplify/api';
 import { GetStoryQuery, ListStoryFragmentsQuery, ModelStoryFragmentFilterInput, OnCreateStoryFragmentSubscription } from '@/api/graphql';
 import { useEffect, useRef, useState } from 'react';
@@ -27,58 +26,38 @@ export async function getServerSideProps({ req }: any) {
     };
 }
 
-export default function Storyline({ character }: any) {
-    const router = useRouter();
-    const id: any = router.query.id;
-    const [story, setStory] = useState<any>();
+export function Story({ story, character }: any) {
     const [fragments, setFragments] = useState<any[]>([]);
     const [prompt, setPrompt] = useState<string>("");
     const [promptEnabled, isPromptEnabled] = useState<boolean>(true);
 
     useEffect(() => {
-        Hub.listen('api', (data: any) => {
-            const { payload } = data;
-            if (payload.event === CONNECTION_STATE_CHANGE) {
-                const connState = payload.data.connectionState as ConnectionState;
-                console.log(connState);
-            }
-        });
-    });
+        API.graphql<GraphQLQuery<ListStoryFragmentsQuery>>({
+            query: listStoryFragments,
+            variables: {
+                filter: {
+                    storyStoryFragmentsId: { eq: story!.id },
+                } as ModelStoryFragmentFilterInput
 
-    useEffect(() => {
-        if (id) {
-            API.graphql<GraphQLQuery<GetStoryQuery>>({
-                query: getStory,
-                variables: { id }
-            }).then(s => s.data?.getStory)
-                .then(async s => {
-                    setStory(s);
-                    const resp = await API.graphql<GraphQLQuery<ListStoryFragmentsQuery>>({
+            }
+        }).then(r => r.data?.listStoryFragments)
+            .then(async data => {
+
+                let nextToken = data?.nextToken;
+                let fragments = data?.items;
+                while (nextToken) {
+                    const nextResp = await API.graphql<GraphQLQuery<ListStoryFragmentsQuery>>({
                         query: listStoryFragments,
                         variables: {
-                            filter: {
-                                storyStoryFragmentsId: { eq: s!.id },
-                            } as ModelStoryFragmentFilterInput
-
+                            nextToken
                         }
                     });
-                    const data = resp.data?.listStoryFragments;
-                    let nextToken = data?.nextToken;
-                    let fragments = data?.items;
-                    while (nextToken) {
-                        const nextResp = await API.graphql<GraphQLQuery<ListStoryFragmentsQuery>>({
-                            query: listStoryFragments,
-                            variables: {
-                                nextToken
-                            }
-                        });
-                        fragments = fragments?.concat(nextResp.data?.listStoryFragments?.items as any);
-                        nextToken = nextResp.data?.listStoryFragments?.nextToken;
-                    }
-                    setFragments(fragments as any[]);
-                })
-        }
-    }, [id]);
+                    fragments = fragments?.concat(nextResp.data?.listStoryFragments?.items as any);
+                    nextToken = nextResp.data?.listStoryFragments?.nextToken;
+                }
+                setFragments(fragments as any[]);
+            });
+    }, [story.id]);
 
     useEffect(() => {
 
@@ -88,7 +67,7 @@ export default function Storyline({ character }: any) {
 
         const token = subscription.subscribe(({ value }) => {
             const data = value.data?.onCreateStoryFragment;
-            if (data && data.story?.id === id) {
+            if (data && data.story?.id === story.id) {
                 setFragments(f => [...f, data]);
             }
         });
@@ -99,7 +78,7 @@ export default function Storyline({ character }: any) {
             token.unsubscribe();
         };
 
-    }, [id]);
+    }, [story.id]);
 
 
     const frags = fragments?.sort((a, b) => a.createdAt > b.createdAt ? 1 : -1).map((frag) => (
@@ -161,11 +140,11 @@ export default function Storyline({ character }: any) {
                                     }
                                 })
                             });
-                            isPromptEnabled(true);
                             setPrompt("");
+                            isPromptEnabled(true);
                         }
                     }}>
-                        <p>fragments: {fragments.length}</p>
+                        <p>wordcount: {fragments.map(f => f.fragment.split(" ").length).reduce((a, b) => a + b, 0)}</p>
                         <TextField
                             label=""
                             value={prompt}
@@ -190,3 +169,11 @@ export default function Storyline({ character }: any) {
         </>
     );
 }
+
+export default function Storyline({ character }: any) {
+    const router = useRouter();
+    const id: any = router.query.id;
+
+    return (<Story story={id} character={character} />);
+}
+

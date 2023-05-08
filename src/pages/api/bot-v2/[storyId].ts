@@ -1,4 +1,4 @@
-import { CreateStoryFragmentMutation, ListStoryFragmentsQuery } from '@/api/graphql';
+import { CreateStoryFragmentMutation, ListStoryFragmentsQuery, ModelStoryFragmentFilterInput } from '@/api/graphql';
 import { createStoryFragment } from '@/graphql/mutations';
 import { listStoryFragments } from '@/graphql/queries';
 import { GraphQLQuery } from '@aws-amplify/api';
@@ -25,7 +25,7 @@ export default async function handler(
     const fragments = await API.graphql<GraphQLQuery<ListStoryFragmentsQuery>>(
         graphqlOperation(
             listStoryFragments,
-            { variables: { filter: { storyStoryFragmentsId: storyId } } }
+            { filter: { storyStoryFragmentsId: { eq: storyId } } }
         ));
 
     const storySoFar = fragments!.data!
@@ -65,8 +65,6 @@ export default async function handler(
     const result = await response.json();
 
     const text = result.choices[0].message.content;
-
-    console.log(JSON.stringify(result));
 
     await API.graphql<GraphQLQuery<CreateStoryFragmentMutation>>({
         query: createStoryFragment,
