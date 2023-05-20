@@ -46,9 +46,6 @@ export const onCreateCharacter = /* GraphQL */ `
       ownerType
       story {
         id
-        currentMessageId
-        storyRootId
-        prevStoryId
         createdAt
         lastAddedToAt
         name
@@ -71,9 +68,6 @@ export const onUpdateCharacter = /* GraphQL */ `
       ownerType
       story {
         id
-        currentMessageId
-        storyRootId
-        prevStoryId
         createdAt
         lastAddedToAt
         name
@@ -96,9 +90,6 @@ export const onDeleteCharacter = /* GraphQL */ `
       ownerType
       story {
         id
-        currentMessageId
-        storyRootId
-        prevStoryId
         createdAt
         lastAddedToAt
         name
@@ -123,9 +114,6 @@ export const onCreateStoryFragment = /* GraphQL */ `
       prevId
       story {
         id
-        currentMessageId
-        storyRootId
-        prevStoryId
         createdAt
         lastAddedToAt
         name
@@ -149,9 +137,6 @@ export const onUpdateStoryFragment = /* GraphQL */ `
       prevId
       story {
         id
-        currentMessageId
-        storyRootId
-        prevStoryId
         createdAt
         lastAddedToAt
         name
@@ -175,9 +160,6 @@ export const onDeleteStoryFragment = /* GraphQL */ `
       prevId
       story {
         id
-        currentMessageId
-        storyRootId
-        prevStoryId
         createdAt
         lastAddedToAt
         name
@@ -192,12 +174,9 @@ export const onCreateStory = /* GraphQL */ `
   subscription OnCreateStory($filter: ModelSubscriptionStoryFilterInput) {
     onCreateStory(filter: $filter) {
       id
-      currentMessageId
-      storyRootId
       storyFragments {
         nextToken
       }
-      prevStoryId
       createdAt
       lastAddedToAt
       characters {
@@ -212,12 +191,9 @@ export const onUpdateStory = /* GraphQL */ `
   subscription OnUpdateStory($filter: ModelSubscriptionStoryFilterInput) {
     onUpdateStory(filter: $filter) {
       id
-      currentMessageId
-      storyRootId
       storyFragments {
         nextToken
       }
-      prevStoryId
       createdAt
       lastAddedToAt
       characters {
@@ -232,12 +208,9 @@ export const onDeleteStory = /* GraphQL */ `
   subscription OnDeleteStory($filter: ModelSubscriptionStoryFilterInput) {
     onDeleteStory(filter: $filter) {
       id
-      currentMessageId
-      storyRootId
       storyFragments {
         nextToken
       }
-      prevStoryId
       createdAt
       lastAddedToAt
       characters {

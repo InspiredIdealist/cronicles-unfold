@@ -23,22 +23,10 @@ export default function StoryCreateForm(props) {
     ...rest
   } = props;
   const initialValues = {
-    currentMessageId: "",
-    storyRootId: "",
-    prevStoryId: "",
     createdAt: "",
     lastAddedToAt: "",
     name: "",
   };
-  const [currentMessageId, setCurrentMessageId] = React.useState(
-    initialValues.currentMessageId
-  );
-  const [storyRootId, setStoryRootId] = React.useState(
-    initialValues.storyRootId
-  );
-  const [prevStoryId, setPrevStoryId] = React.useState(
-    initialValues.prevStoryId
-  );
   const [createdAt, setCreatedAt] = React.useState(initialValues.createdAt);
   const [lastAddedToAt, setLastAddedToAt] = React.useState(
     initialValues.lastAddedToAt
@@ -46,18 +34,12 @@ export default function StoryCreateForm(props) {
   const [name, setName] = React.useState(initialValues.name);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
-    setCurrentMessageId(initialValues.currentMessageId);
-    setStoryRootId(initialValues.storyRootId);
-    setPrevStoryId(initialValues.prevStoryId);
     setCreatedAt(initialValues.createdAt);
     setLastAddedToAt(initialValues.lastAddedToAt);
     setName(initialValues.name);
     setErrors({});
   };
   const validations = {
-    currentMessageId: [{ type: "Required" }],
-    storyRootId: [{ type: "Required" }],
-    prevStoryId: [],
     createdAt: [{ type: "Required" }],
     lastAddedToAt: [{ type: "Required" }],
     name: [{ type: "Required" }],
@@ -105,9 +87,6 @@ export default function StoryCreateForm(props) {
       onSubmit={async (event) => {
         event.preventDefault();
         let modelFields = {
-          currentMessageId,
-          storyRootId,
-          prevStoryId,
           createdAt,
           lastAddedToAt,
           name,
@@ -157,93 +136,6 @@ export default function StoryCreateForm(props) {
       {...rest}
     >
       <TextField
-        label="Current message id"
-        isRequired={true}
-        isReadOnly={false}
-        value={currentMessageId}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              currentMessageId: value,
-              storyRootId,
-              prevStoryId,
-              createdAt,
-              lastAddedToAt,
-              name,
-            };
-            const result = onChange(modelFields);
-            value = result?.currentMessageId ?? value;
-          }
-          if (errors.currentMessageId?.hasError) {
-            runValidationTasks("currentMessageId", value);
-          }
-          setCurrentMessageId(value);
-        }}
-        onBlur={() => runValidationTasks("currentMessageId", currentMessageId)}
-        errorMessage={errors.currentMessageId?.errorMessage}
-        hasError={errors.currentMessageId?.hasError}
-        {...getOverrideProps(overrides, "currentMessageId")}
-      ></TextField>
-      <TextField
-        label="Story root id"
-        isRequired={true}
-        isReadOnly={false}
-        value={storyRootId}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              currentMessageId,
-              storyRootId: value,
-              prevStoryId,
-              createdAt,
-              lastAddedToAt,
-              name,
-            };
-            const result = onChange(modelFields);
-            value = result?.storyRootId ?? value;
-          }
-          if (errors.storyRootId?.hasError) {
-            runValidationTasks("storyRootId", value);
-          }
-          setStoryRootId(value);
-        }}
-        onBlur={() => runValidationTasks("storyRootId", storyRootId)}
-        errorMessage={errors.storyRootId?.errorMessage}
-        hasError={errors.storyRootId?.hasError}
-        {...getOverrideProps(overrides, "storyRootId")}
-      ></TextField>
-      <TextField
-        label="Prev story id"
-        isRequired={false}
-        isReadOnly={false}
-        value={prevStoryId}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              currentMessageId,
-              storyRootId,
-              prevStoryId: value,
-              createdAt,
-              lastAddedToAt,
-              name,
-            };
-            const result = onChange(modelFields);
-            value = result?.prevStoryId ?? value;
-          }
-          if (errors.prevStoryId?.hasError) {
-            runValidationTasks("prevStoryId", value);
-          }
-          setPrevStoryId(value);
-        }}
-        onBlur={() => runValidationTasks("prevStoryId", prevStoryId)}
-        errorMessage={errors.prevStoryId?.errorMessage}
-        hasError={errors.prevStoryId?.hasError}
-        {...getOverrideProps(overrides, "prevStoryId")}
-      ></TextField>
-      <TextField
         label="Created at"
         isRequired={true}
         isReadOnly={false}
@@ -254,9 +146,6 @@ export default function StoryCreateForm(props) {
             e.target.value === "" ? "" : new Date(e.target.value).toISOString();
           if (onChange) {
             const modelFields = {
-              currentMessageId,
-              storyRootId,
-              prevStoryId,
               createdAt: value,
               lastAddedToAt,
               name,
@@ -285,9 +174,6 @@ export default function StoryCreateForm(props) {
             e.target.value === "" ? "" : new Date(e.target.value).toISOString();
           if (onChange) {
             const modelFields = {
-              currentMessageId,
-              storyRootId,
-              prevStoryId,
               createdAt,
               lastAddedToAt: value,
               name,
@@ -314,9 +200,6 @@ export default function StoryCreateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              currentMessageId,
-              storyRootId,
-              prevStoryId,
               createdAt,
               lastAddedToAt,
               name: value,

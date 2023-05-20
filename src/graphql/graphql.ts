@@ -124,10 +124,7 @@ export type Character = {
 export type Story = {
   __typename: "Story",
   id: string,
-  currentMessageId: string,
-  storyRootId: string,
   storyFragments?: ModelStoryFragmentConnection | null,
-  prevStoryId?: string | null,
   createdAt: string,
   lastAddedToAt: string,
   characters?: ModelCharacterConnection | null,
@@ -210,18 +207,12 @@ export type DeleteStoryFragmentInput = {
 
 export type CreateStoryInput = {
   id?: string | null,
-  currentMessageId: string,
-  storyRootId: string,
-  prevStoryId?: string | null,
   createdAt?: string | null,
   lastAddedToAt: string,
   name: string,
 };
 
 export type ModelStoryConditionInput = {
-  currentMessageId?: ModelStringInput | null,
-  storyRootId?: ModelStringInput | null,
-  prevStoryId?: ModelStringInput | null,
   createdAt?: ModelStringInput | null,
   lastAddedToAt?: ModelStringInput | null,
   name?: ModelStringInput | null,
@@ -232,9 +223,6 @@ export type ModelStoryConditionInput = {
 
 export type UpdateStoryInput = {
   id: string,
-  currentMessageId?: string | null,
-  storyRootId?: string | null,
-  prevStoryId?: string | null,
   createdAt?: string | null,
   lastAddedToAt?: string | null,
   name?: string | null,
@@ -285,9 +273,6 @@ export type ModelStoryFragmentFilterInput = {
 
 export type ModelStoryFilterInput = {
   id?: ModelIDInput | null,
-  currentMessageId?: ModelStringInput | null,
-  storyRootId?: ModelStringInput | null,
-  prevStoryId?: ModelStringInput | null,
   createdAt?: ModelStringInput | null,
   lastAddedToAt?: ModelStringInput | null,
   name?: ModelStringInput | null,
@@ -362,9 +347,6 @@ export type ModelSubscriptionStoryFragmentFilterInput = {
 
 export type ModelSubscriptionStoryFilterInput = {
   id?: ModelSubscriptionIDInput | null,
-  currentMessageId?: ModelSubscriptionStringInput | null,
-  storyRootId?: ModelSubscriptionStringInput | null,
-  prevStoryId?: ModelSubscriptionStringInput | null,
   createdAt?: ModelSubscriptionStringInput | null,
   lastAddedToAt?: ModelSubscriptionStringInput | null,
   name?: ModelSubscriptionStringInput | null,
@@ -435,9 +417,6 @@ export type CreateCharacterMutation = {
     story?:  {
       __typename: "Story",
       id: string,
-      currentMessageId: string,
-      storyRootId: string,
-      prevStoryId?: string | null,
       createdAt: string,
       lastAddedToAt: string,
       name: string,
@@ -464,9 +443,6 @@ export type UpdateCharacterMutation = {
     story?:  {
       __typename: "Story",
       id: string,
-      currentMessageId: string,
-      storyRootId: string,
-      prevStoryId?: string | null,
       createdAt: string,
       lastAddedToAt: string,
       name: string,
@@ -493,9 +469,6 @@ export type DeleteCharacterMutation = {
     story?:  {
       __typename: "Story",
       id: string,
-      currentMessageId: string,
-      storyRootId: string,
-      prevStoryId?: string | null,
       createdAt: string,
       lastAddedToAt: string,
       name: string,
@@ -524,9 +497,6 @@ export type CreateStoryFragmentMutation = {
     story?:  {
       __typename: "Story",
       id: string,
-      currentMessageId: string,
-      storyRootId: string,
-      prevStoryId?: string | null,
       createdAt: string,
       lastAddedToAt: string,
       name: string,
@@ -554,9 +524,6 @@ export type UpdateStoryFragmentMutation = {
     story?:  {
       __typename: "Story",
       id: string,
-      currentMessageId: string,
-      storyRootId: string,
-      prevStoryId?: string | null,
       createdAt: string,
       lastAddedToAt: string,
       name: string,
@@ -584,9 +551,6 @@ export type DeleteStoryFragmentMutation = {
     story?:  {
       __typename: "Story",
       id: string,
-      currentMessageId: string,
-      storyRootId: string,
-      prevStoryId?: string | null,
       createdAt: string,
       lastAddedToAt: string,
       name: string,
@@ -606,13 +570,10 @@ export type CreateStoryMutation = {
   createStory?:  {
     __typename: "Story",
     id: string,
-    currentMessageId: string,
-    storyRootId: string,
     storyFragments?:  {
       __typename: "ModelStoryFragmentConnection",
       nextToken?: string | null,
     } | null,
-    prevStoryId?: string | null,
     createdAt: string,
     lastAddedToAt: string,
     characters?:  {
@@ -633,13 +594,10 @@ export type UpdateStoryMutation = {
   updateStory?:  {
     __typename: "Story",
     id: string,
-    currentMessageId: string,
-    storyRootId: string,
     storyFragments?:  {
       __typename: "ModelStoryFragmentConnection",
       nextToken?: string | null,
     } | null,
-    prevStoryId?: string | null,
     createdAt: string,
     lastAddedToAt: string,
     characters?:  {
@@ -660,13 +618,10 @@ export type DeleteStoryMutation = {
   deleteStory?:  {
     __typename: "Story",
     id: string,
-    currentMessageId: string,
-    storyRootId: string,
     storyFragments?:  {
       __typename: "ModelStoryFragmentConnection",
       nextToken?: string | null,
     } | null,
-    prevStoryId?: string | null,
     createdAt: string,
     lastAddedToAt: string,
     characters?:  {
@@ -728,9 +683,6 @@ export type GetCharacterQuery = {
     story?:  {
       __typename: "Story",
       id: string,
-      currentMessageId: string,
-      storyRootId: string,
-      prevStoryId?: string | null,
       createdAt: string,
       lastAddedToAt: string,
       name: string,
@@ -781,9 +733,6 @@ export type GetStoryFragmentQuery = {
     story?:  {
       __typename: "Story",
       id: string,
-      currentMessageId: string,
-      storyRootId: string,
-      prevStoryId?: string | null,
       createdAt: string,
       lastAddedToAt: string,
       name: string,
@@ -826,13 +775,10 @@ export type GetStoryQuery = {
   getStory?:  {
     __typename: "Story",
     id: string,
-    currentMessageId: string,
-    storyRootId: string,
     storyFragments?:  {
       __typename: "ModelStoryFragmentConnection",
       nextToken?: string | null,
     } | null,
-    prevStoryId?: string | null,
     createdAt: string,
     lastAddedToAt: string,
     characters?:  {
@@ -856,9 +802,6 @@ export type ListStoriesQuery = {
     items:  Array< {
       __typename: "Story",
       id: string,
-      currentMessageId: string,
-      storyRootId: string,
-      prevStoryId?: string | null,
       createdAt: string,
       lastAddedToAt: string,
       name: string,
@@ -927,9 +870,6 @@ export type OnCreateCharacterSubscription = {
     story?:  {
       __typename: "Story",
       id: string,
-      currentMessageId: string,
-      storyRootId: string,
-      prevStoryId?: string | null,
       createdAt: string,
       lastAddedToAt: string,
       name: string,
@@ -955,9 +895,6 @@ export type OnUpdateCharacterSubscription = {
     story?:  {
       __typename: "Story",
       id: string,
-      currentMessageId: string,
-      storyRootId: string,
-      prevStoryId?: string | null,
       createdAt: string,
       lastAddedToAt: string,
       name: string,
@@ -983,9 +920,6 @@ export type OnDeleteCharacterSubscription = {
     story?:  {
       __typename: "Story",
       id: string,
-      currentMessageId: string,
-      storyRootId: string,
-      prevStoryId?: string | null,
       createdAt: string,
       lastAddedToAt: string,
       name: string,
@@ -1013,9 +947,6 @@ export type OnCreateStoryFragmentSubscription = {
     story?:  {
       __typename: "Story",
       id: string,
-      currentMessageId: string,
-      storyRootId: string,
-      prevStoryId?: string | null,
       createdAt: string,
       lastAddedToAt: string,
       name: string,
@@ -1042,9 +973,6 @@ export type OnUpdateStoryFragmentSubscription = {
     story?:  {
       __typename: "Story",
       id: string,
-      currentMessageId: string,
-      storyRootId: string,
-      prevStoryId?: string | null,
       createdAt: string,
       lastAddedToAt: string,
       name: string,
@@ -1071,9 +999,6 @@ export type OnDeleteStoryFragmentSubscription = {
     story?:  {
       __typename: "Story",
       id: string,
-      currentMessageId: string,
-      storyRootId: string,
-      prevStoryId?: string | null,
       createdAt: string,
       lastAddedToAt: string,
       name: string,
@@ -1092,13 +1017,10 @@ export type OnCreateStorySubscription = {
   onCreateStory?:  {
     __typename: "Story",
     id: string,
-    currentMessageId: string,
-    storyRootId: string,
     storyFragments?:  {
       __typename: "ModelStoryFragmentConnection",
       nextToken?: string | null,
     } | null,
-    prevStoryId?: string | null,
     createdAt: string,
     lastAddedToAt: string,
     characters?:  {
@@ -1118,13 +1040,10 @@ export type OnUpdateStorySubscription = {
   onUpdateStory?:  {
     __typename: "Story",
     id: string,
-    currentMessageId: string,
-    storyRootId: string,
     storyFragments?:  {
       __typename: "ModelStoryFragmentConnection",
       nextToken?: string | null,
     } | null,
-    prevStoryId?: string | null,
     createdAt: string,
     lastAddedToAt: string,
     characters?:  {
@@ -1144,13 +1063,10 @@ export type OnDeleteStorySubscription = {
   onDeleteStory?:  {
     __typename: "Story",
     id: string,
-    currentMessageId: string,
-    storyRootId: string,
     storyFragments?:  {
       __typename: "ModelStoryFragmentConnection",
       nextToken?: string | null,
     } | null,
-    prevStoryId?: string | null,
     createdAt: string,
     lastAddedToAt: string,
     characters?:  {

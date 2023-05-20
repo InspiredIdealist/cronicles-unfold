@@ -40,9 +40,6 @@ export const getCharacter = /* GraphQL */ `
       ownerType
       story {
         id
-        currentMessageId
-        storyRootId
-        prevStoryId
         createdAt
         lastAddedToAt
         name
@@ -85,9 +82,6 @@ export const getStoryFragment = /* GraphQL */ `
       prevId
       story {
         id
-        currentMessageId
-        storyRootId
-        prevStoryId
         createdAt
         lastAddedToAt
         name
@@ -123,12 +117,9 @@ export const getStory = /* GraphQL */ `
   query GetStory($id: ID!) {
     getStory(id: $id) {
       id
-      currentMessageId
-      storyRootId
       storyFragments {
         nextToken
       }
-      prevStoryId
       createdAt
       lastAddedToAt
       characters {
@@ -148,9 +139,6 @@ export const listStories = /* GraphQL */ `
     listStories(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        currentMessageId
-        storyRootId
-        prevStoryId
         createdAt
         lastAddedToAt
         name

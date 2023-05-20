@@ -108,7 +108,7 @@ export function Story({ story, character }: any) {
                         e.preventDefault();
                         if (prompt && prompt.trim()) {
                             isPromptEnabled(false);
-                            await fetch(`/api/bot/${story.id}`, {
+                            await fetch("/api/bot", {
                                 method: "POST",
                                 headers: {
                                     "Content-Type": "application/json"
@@ -119,7 +119,8 @@ export function Story({ story, character }: any) {
                                         id: character.id,
                                         type: "Character",
                                         name: character.name
-                                    }
+                                    },
+                                    storyId: story.id
                                 })
                             });
                             setPrompt("");

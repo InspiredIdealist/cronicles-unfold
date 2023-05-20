@@ -12,7 +12,7 @@ interface Segment {
 }
 
 const API_KEY = process.env.OPENAI_API_KEY;
-const url = "https://api.openai.com/v1";
+const url = "https://api.openai.com";
 const completionUrl = `${url}/v1/chat/completions`;
 const fineTuneUrl = `${url}/v1/fine-tunes`;
 const fileUrl = `${url}/v1/files`;
@@ -29,10 +29,11 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    const storyId = req.query.storyId;
-    const { nextPrompt, origin } = req.body;
+    const { nextPrompt, origin, storyId } = req.body;
 
-
+    if (!nextPrompt || !origin || !storyId) {
+        res.status(400).send("missing required fields");
+    }
 
     const fragments = await API.graphql<GraphQLQuery<ListStoryFragmentsQuery>>(
         graphqlOperation(
@@ -54,6 +55,10 @@ export default async function handler(
 
     const options = {
         "model": `gpt-3.5-turbo`,
+        "n": 1,
+        "stream": false,
+        "max_tokens": 256,
+        "user": origin.id,
         "messages": [
             { "role": "system", "content": metaPrompt },
             { "role": "assistant", "content": storySoFar },
@@ -70,7 +75,7 @@ export default async function handler(
 
     if (!response.ok) {
         const txt = await response.text();
-        res.status(response.status).send("errored out: " + txt);
+        res.status(500).send(txt);
         return;
     }
 

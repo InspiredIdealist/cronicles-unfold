@@ -57,17 +57,14 @@ export function App({ character, stories }: any) {
                 variables: {
                     input: {
                         name,
-                        lastAddedToAt: new Date().toISOString(),
-                        // TODO: eliminate these useless fields
-                        currentMessageId: '1111',
-                        storyRootId: '111'
+                        lastAddedToAt: new Date().toISOString()
                     }
                 }
             });
 
             const storyData = newStory.data?.createStory!;
 
-            await fetch("/api/bot-v2", {
+            await fetch("/api/bot", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -79,7 +76,7 @@ export function App({ character, stories }: any) {
                         type: "Author",
                         name: author.name
                     },
-                    story: storyData
+                    storyId: storyData.id
                 })
             });
 

@@ -14,17 +14,11 @@ export declare type ValidationResponse = {
 };
 export declare type ValidationFunction<T> = (value: T, validationResponse: ValidationResponse) => ValidationResponse | Promise<ValidationResponse>;
 export declare type StoryUpdateFormInputValues = {
-    currentMessageId?: string;
-    storyRootId?: string;
-    prevStoryId?: string;
     createdAt?: string;
     lastAddedToAt?: string;
     name?: string;
 };
 export declare type StoryUpdateFormValidationValues = {
-    currentMessageId?: ValidationFunction<string>;
-    storyRootId?: ValidationFunction<string>;
-    prevStoryId?: ValidationFunction<string>;
     createdAt?: ValidationFunction<string>;
     lastAddedToAt?: ValidationFunction<string>;
     name?: ValidationFunction<string>;
@@ -32,9 +26,6 @@ export declare type StoryUpdateFormValidationValues = {
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type StoryUpdateFormOverridesProps = {
     StoryUpdateFormGrid?: PrimitiveOverrideProps<GridProps>;
-    currentMessageId?: PrimitiveOverrideProps<TextFieldProps>;
-    storyRootId?: PrimitiveOverrideProps<TextFieldProps>;
-    prevStoryId?: PrimitiveOverrideProps<TextFieldProps>;
     createdAt?: PrimitiveOverrideProps<TextFieldProps>;
     lastAddedToAt?: PrimitiveOverrideProps<TextFieldProps>;
     name?: PrimitiveOverrideProps<TextFieldProps>;

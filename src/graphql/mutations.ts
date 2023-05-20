@@ -56,9 +56,6 @@ export const createCharacter = /* GraphQL */ `
       ownerType
       story {
         id
-        currentMessageId
-        storyRootId
-        prevStoryId
         createdAt
         lastAddedToAt
         name
@@ -82,9 +79,6 @@ export const updateCharacter = /* GraphQL */ `
       ownerType
       story {
         id
-        currentMessageId
-        storyRootId
-        prevStoryId
         createdAt
         lastAddedToAt
         name
@@ -108,9 +102,6 @@ export const deleteCharacter = /* GraphQL */ `
       ownerType
       story {
         id
-        currentMessageId
-        storyRootId
-        prevStoryId
         createdAt
         lastAddedToAt
         name
@@ -136,9 +127,6 @@ export const createStoryFragment = /* GraphQL */ `
       prevId
       story {
         id
-        currentMessageId
-        storyRootId
-        prevStoryId
         createdAt
         lastAddedToAt
         name
@@ -163,9 +151,6 @@ export const updateStoryFragment = /* GraphQL */ `
       prevId
       story {
         id
-        currentMessageId
-        storyRootId
-        prevStoryId
         createdAt
         lastAddedToAt
         name
@@ -190,9 +175,6 @@ export const deleteStoryFragment = /* GraphQL */ `
       prevId
       story {
         id
-        currentMessageId
-        storyRootId
-        prevStoryId
         createdAt
         lastAddedToAt
         name
@@ -210,12 +192,9 @@ export const createStory = /* GraphQL */ `
   ) {
     createStory(input: $input, condition: $condition) {
       id
-      currentMessageId
-      storyRootId
       storyFragments {
         nextToken
       }
-      prevStoryId
       createdAt
       lastAddedToAt
       characters {
@@ -233,12 +212,9 @@ export const updateStory = /* GraphQL */ `
   ) {
     updateStory(input: $input, condition: $condition) {
       id
-      currentMessageId
-      storyRootId
       storyFragments {
         nextToken
       }
-      prevStoryId
       createdAt
       lastAddedToAt
       characters {
@@ -256,12 +232,9 @@ export const deleteStory = /* GraphQL */ `
   ) {
     deleteStory(input: $input, condition: $condition) {
       id
-      currentMessageId
-      storyRootId
       storyFragments {
         nextToken
       }
-      prevStoryId
       createdAt
       lastAddedToAt
       characters {

@@ -24,10 +24,7 @@ type StoryFragment @model @auth(rules: [{allow: public}]) {
 
 type Story @model @auth(rules: [{allow: public}]) {
   id: ID!
-  currentMessageId: String!
-  storyRootId: String!
   storyFragments: [StoryFragment] @hasMany
-  prevStoryId: String
   createdAt: AWSDateTime!
   lastAddedToAt: AWSDateTime!
   characters: [Character] @hasMany
