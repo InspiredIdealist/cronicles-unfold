@@ -1,4 +1,4 @@
-import { ListStoriesQuery } from '@/api/graphql';
+import { ListStoriesQuery } from '@/graphql/graphql';
 import { listStories } from '@/graphql/queries';
 import StoryCard from '@/ui-components/StoryCard';
 import { GraphQLQuery } from '@aws-amplify/api';

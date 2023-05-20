@@ -1,4 +1,4 @@
-import { CreateStoryMutation, ListStoriesQuery } from '@/api/graphql';
+import { CreateStoryMutation, ListStoriesQuery } from '@/graphql/graphql';
 import { listStories } from '@/graphql/queries';
 import { GraphQLQuery, graphqlOperation } from '@aws-amplify/api';
 import { TabItem, Tabs, withAuthenticator } from '@aws-amplify/ui-react';

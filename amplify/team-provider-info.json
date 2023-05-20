@@ -17,9 +17,6 @@
       },
       "storage": {
         "s3croniclesunfoldstoragefe3d22f0": {}
-      },
-      "api": {
-        "CroniclesUnfold": {}
       }
     }
   }

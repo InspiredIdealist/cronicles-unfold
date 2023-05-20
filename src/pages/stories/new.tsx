@@ -1,5 +1,5 @@
-import { CreateStoryFragmentInput, CreateStoryFragmentMutation, CreateStoryInput, CreateStoryMutation } from "@/api/graphql";
-import { createStory, createStoryFragment } from "@/graphql/mutations";
+import { CreateStoryInput, CreateStoryMutation } from "@/graphql/graphql";
+import { createStory } from "@/graphql/mutations";
 import { GraphQLQuery } from "@aws-amplify/api";
 import { Button, TextField } from "@aws-amplify/ui-react";
 import { API, withSSRContext } from "aws-amplify";

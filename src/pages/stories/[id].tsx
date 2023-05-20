@@ -1,7 +1,7 @@
 import { Button, Divider, FieldGroupIcon, Flex, Heading, TextField, View } from '@aws-amplify/ui-react';
 import { API, withSSRContext } from 'aws-amplify';
 import { GraphQLQuery, GraphQLSubscription, graphqlOperation } from '@aws-amplify/api';
-import { GetStoryQuery, ListStoryFragmentsQuery, ModelStoryFragmentFilterInput, OnCreateStoryFragmentSubscription } from '@/api/graphql';
+import { GetStoryQuery, ListStoryFragmentsQuery, ModelStoryFragmentFilterInput, OnCreateStoryFragmentSubscription } from '@/graphql/graphql';
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import { getStory, listStoryFragments } from '@/graphql/queries';
