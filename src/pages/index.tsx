@@ -11,11 +11,22 @@ import { createStory } from '@/graphql/mutations';
 export async function getServerSideProps({ req }: any) {
 
     const { Auth } = withSSRContext({ req });
-    const user = await Auth.currentAuthenticatedUser();
+    const { attributes } = await (Auth.currentAuthenticatedUser()
+        .catch(() => ({}))
+    );
+
+    if (!attributes) {
+        return {
+            redirect: {
+                destination: "/login",
+                permanent: false
+            }
+        }
+    }
 
     const character = {
-        id: user.attributes.sub,
-        name: user.attributes.preferred_username
+        id: attributes.sub,
+        name: attributes.preferred_username
     };
 
     const stories = await API
@@ -35,9 +46,6 @@ export function App({ character, stories }: any) {
 
     const [story, setActiveStory] = useState<any>();
     const [newStory, setNewStoryMode] = useState<boolean>(false);
-
-    useEffect(() => {
-    }, []);
 
     const tabs = stories.map((story: any) => (
         <TabItem title={story.name} key={story.id} onClick={() => setActiveStory(story)} />
