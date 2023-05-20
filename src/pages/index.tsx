@@ -4,7 +4,7 @@ import { GraphQLQuery, graphqlOperation } from '@aws-amplify/api';
 import { TabItem, Tabs, withAuthenticator } from '@aws-amplify/ui-react';
 import { API, withSSRContext } from 'aws-amplify';
 import { useEffect, useState } from 'react';
-import { Story } from './stories/[id]';
+import { Story } from '@/components/story';
 import NewStory from '@/ui-components/NewStory';
 import { createStory } from '@/graphql/mutations';
 

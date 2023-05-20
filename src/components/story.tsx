@@ -1,30 +1,12 @@
 import { Button, Divider, FieldGroupIcon, Flex, Heading, TextField, View } from '@aws-amplify/ui-react';
-import { API, withSSRContext } from 'aws-amplify';
+import { API } from 'aws-amplify';
 import { GraphQLQuery, GraphQLSubscription, graphqlOperation } from '@aws-amplify/api';
-import { GetStoryQuery, ListStoryFragmentsQuery, ModelStoryFragmentFilterInput, OnCreateStoryFragmentSubscription } from '@/graphql/graphql';
+import { ListStoryFragmentsQuery, ModelStoryFragmentFilterInput, OnCreateStoryFragmentSubscription } from '@/graphql/graphql';
 import { useEffect, useRef, useState } from 'react';
-import { useRouter } from 'next/router';
-import { getStory, listStoryFragments } from '@/graphql/queries';
+import { listStoryFragments } from '@/graphql/queries';
 import { onCreateStoryFragment } from '@/graphql/subscriptions';
 import Head from 'next/head';
 
-
-export async function getServerSideProps({ req }: any) {
-
-    const { Auth } = withSSRContext({ req });
-    const user = await Auth.currentAuthenticatedUser();
-
-    const character = {
-        id: user.attributes.sub,
-        name: user.attributes.preferred_username
-    };
-
-    return {
-        props: {
-            character
-        }
-    };
-}
 
 export function Story({ story, character }: any) {
     const [fragments, setFragments] = useState<any[]>([]);
@@ -126,7 +108,7 @@ export function Story({ story, character }: any) {
                         e.preventDefault();
                         if (prompt && prompt.trim()) {
                             isPromptEnabled(false);
-                            await fetch(`/api/bot-v2/${story.id}`, {
+                            await fetch(`/api/bot/${story.id}`, {
                                 method: "POST",
                                 headers: {
                                     "Content-Type": "application/json"
@@ -168,12 +150,5 @@ export function Story({ story, character }: any) {
             <div ref={bottomRef}></div>
         </>
     );
-}
-
-export default function Storyline({ character }: any) {
-    const router = useRouter();
-    const id: any = router.query.id;
-
-    return (<Story story={id} character={character} />);
 }
 

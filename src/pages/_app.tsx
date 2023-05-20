@@ -1,6 +1,5 @@
 import '@/styles/globals.css'
 import type { AppProps } from 'next/app'
-import { trpc } from '../utils/trpc';
 import { Amplify } from 'aws-amplify';
 import config from "../aws-exports"
 import { Authenticator } from '@aws-amplify/ui-react';
@@ -14,5 +13,5 @@ export function App({ Component, pageProps }: AppProps) {
     );
 }
 
-export default trpc.withTRPC(App);
+export default App;
 
