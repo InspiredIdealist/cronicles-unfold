@@ -2,6 +2,35 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const getGuidance = /* GraphQL */ `
+  query GetGuidance($id: ID!) {
+    getGuidance(id: $id) {
+      id
+      instructions
+      codename
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listGuidances = /* GraphQL */ `
+  query ListGuidances(
+    $filter: ModelGuidanceFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listGuidances(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        instructions
+        codename
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getCharacter = /* GraphQL */ `
   query GetCharacter($id: ID!) {
     getCharacter(id: $id) {

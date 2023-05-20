@@ -6,8 +6,7 @@
 
 import * as React from "react";
 import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
-import { FlexProps, ImageProps, TextProps } from "@aws-amplify/ui-react";
-import { MyIconProps } from "./MyIcon";
+import { FlexProps, ImageProps, TextProps, ViewProps } from "@aws-amplify/ui-react";
 import { SyntheticEvent } from "react";
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type StoryCardOverridesProps = {
@@ -17,8 +16,9 @@ export declare type StoryCardOverridesProps = {
     title?: PrimitiveOverrideProps<TextProps>;
     subtext?: PrimitiveOverrideProps<TextProps>;
     characters?: PrimitiveOverrideProps<FlexProps>;
-    icon?: MyIconProps;
+    icon?: PrimitiveOverrideProps<ViewProps>;
     count?: PrimitiveOverrideProps<TextProps>;
+    groupName?: PrimitiveOverrideProps<TextProps>;
     readButton?: PrimitiveOverrideProps<FlexProps>;
     label?: PrimitiveOverrideProps<TextProps>;
 } & EscapeHatchProps;

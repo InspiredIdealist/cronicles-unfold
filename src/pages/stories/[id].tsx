@@ -57,7 +57,7 @@ export function Story({ story, character }: any) {
                 }
                 setFragments(fragments as any[]);
             });
-    }, [story.id]);
+    }, [story]);
 
     useEffect(() => {
 

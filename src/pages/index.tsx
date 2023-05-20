@@ -5,7 +5,6 @@ import { TabItem, Tabs, withAuthenticator } from '@aws-amplify/ui-react';
 import { API, withSSRContext } from 'aws-amplify';
 import { useEffect, useState } from 'react';
 import { Story } from './stories/[id]';
-import { useRouter } from 'next/router';
 import NewStory from '@/ui-components/NewStory';
 import { createStory } from '@/graphql/mutations';
 
@@ -34,7 +33,6 @@ export async function getServerSideProps({ req }: any) {
 
 export function App({ character, stories }: any) {
 
-    const router = useRouter();
     const [story, setActiveStory] = useState<any>();
     const [newStory, setNewStoryMode] = useState<boolean>(false);
 
@@ -91,7 +89,9 @@ export function App({ character, stories }: any) {
         storyView = (<NewStory onSubmit={async (s) => {
             await submit({ name: s.Field0, author: character, genesisPrompt: s.Field1 });
             setNewStoryMode(false);
-        }} />);
+        }}
+            onCancel={() => setNewStoryMode(false)}
+        />);
     }
 
     return (

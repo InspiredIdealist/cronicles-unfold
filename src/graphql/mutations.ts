@@ -2,6 +2,48 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const createGuidance = /* GraphQL */ `
+  mutation CreateGuidance(
+    $input: CreateGuidanceInput!
+    $condition: ModelGuidanceConditionInput
+  ) {
+    createGuidance(input: $input, condition: $condition) {
+      id
+      instructions
+      codename
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateGuidance = /* GraphQL */ `
+  mutation UpdateGuidance(
+    $input: UpdateGuidanceInput!
+    $condition: ModelGuidanceConditionInput
+  ) {
+    updateGuidance(input: $input, condition: $condition) {
+      id
+      instructions
+      codename
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteGuidance = /* GraphQL */ `
+  mutation DeleteGuidance(
+    $input: DeleteGuidanceInput!
+    $condition: ModelGuidanceConditionInput
+  ) {
+    deleteGuidance(input: $input, condition: $condition) {
+      id
+      instructions
+      codename
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createCharacter = /* GraphQL */ `
   mutation CreateCharacter(
     $input: CreateCharacterInput!

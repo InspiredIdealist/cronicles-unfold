@@ -2,22 +2,18 @@
 /* eslint-disable */
 //  This file was automatically generated and should not be edited.
 
-export type CreateCharacterInput = {
+export type CreateGuidanceInput = {
   id?: string | null,
-  name?: string | null,
-  ownerId: string,
-  ownerType: string,
-  storyCharactersId?: string | null,
+  instructions?: string | null,
+  codename?: string | null,
 };
 
-export type ModelCharacterConditionInput = {
-  name?: ModelStringInput | null,
-  ownerId?: ModelStringInput | null,
-  ownerType?: ModelStringInput | null,
-  and?: Array< ModelCharacterConditionInput | null > | null,
-  or?: Array< ModelCharacterConditionInput | null > | null,
-  not?: ModelCharacterConditionInput | null,
-  storyCharactersId?: ModelIDInput | null,
+export type ModelGuidanceConditionInput = {
+  instructions?: ModelStringInput | null,
+  codename?: ModelStringInput | null,
+  and?: Array< ModelGuidanceConditionInput | null > | null,
+  or?: Array< ModelGuidanceConditionInput | null > | null,
+  not?: ModelGuidanceConditionInput | null,
 };
 
 export type ModelStringInput = {
@@ -58,6 +54,43 @@ export type ModelSizeInput = {
   ge?: number | null,
   gt?: number | null,
   between?: Array< number | null > | null,
+};
+
+export type Guidance = {
+  __typename: "Guidance",
+  id: string,
+  instructions?: string | null,
+  codename?: string | null,
+  createdAt: string,
+  updatedAt: string,
+};
+
+export type UpdateGuidanceInput = {
+  id: string,
+  instructions?: string | null,
+  codename?: string | null,
+};
+
+export type DeleteGuidanceInput = {
+  id: string,
+};
+
+export type CreateCharacterInput = {
+  id?: string | null,
+  name?: string | null,
+  ownerId: string,
+  ownerType: string,
+  storyCharactersId?: string | null,
+};
+
+export type ModelCharacterConditionInput = {
+  name?: ModelStringInput | null,
+  ownerId?: ModelStringInput | null,
+  ownerType?: ModelStringInput | null,
+  and?: Array< ModelCharacterConditionInput | null > | null,
+  or?: Array< ModelCharacterConditionInput | null > | null,
+  not?: ModelCharacterConditionInput | null,
+  storyCharactersId?: ModelIDInput | null,
 };
 
 export type ModelIDInput = {
@@ -211,6 +244,21 @@ export type DeleteStoryInput = {
   id: string,
 };
 
+export type ModelGuidanceFilterInput = {
+  id?: ModelIDInput | null,
+  instructions?: ModelStringInput | null,
+  codename?: ModelStringInput | null,
+  and?: Array< ModelGuidanceFilterInput | null > | null,
+  or?: Array< ModelGuidanceFilterInput | null > | null,
+  not?: ModelGuidanceFilterInput | null,
+};
+
+export type ModelGuidanceConnection = {
+  __typename: "ModelGuidanceConnection",
+  items:  Array<Guidance | null >,
+  nextToken?: string | null,
+};
+
 export type ModelCharacterFilterInput = {
   id?: ModelIDInput | null,
   name?: ModelStringInput | null,
@@ -254,13 +302,12 @@ export type ModelStoryConnection = {
   nextToken?: string | null,
 };
 
-export type ModelSubscriptionCharacterFilterInput = {
+export type ModelSubscriptionGuidanceFilterInput = {
   id?: ModelSubscriptionIDInput | null,
-  name?: ModelSubscriptionStringInput | null,
-  ownerId?: ModelSubscriptionStringInput | null,
-  ownerType?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionCharacterFilterInput | null > | null,
-  or?: Array< ModelSubscriptionCharacterFilterInput | null > | null,
+  instructions?: ModelSubscriptionStringInput | null,
+  codename?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionGuidanceFilterInput | null > | null,
+  or?: Array< ModelSubscriptionGuidanceFilterInput | null > | null,
 };
 
 export type ModelSubscriptionIDInput = {
@@ -293,6 +340,15 @@ export type ModelSubscriptionStringInput = {
   notIn?: Array< string | null > | null,
 };
 
+export type ModelSubscriptionCharacterFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
+  name?: ModelSubscriptionStringInput | null,
+  ownerId?: ModelSubscriptionStringInput | null,
+  ownerType?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionCharacterFilterInput | null > | null,
+  or?: Array< ModelSubscriptionCharacterFilterInput | null > | null,
+};
+
 export type ModelSubscriptionStoryFragmentFilterInput = {
   id?: ModelSubscriptionIDInput | null,
   fragment?: ModelSubscriptionStringInput | null,
@@ -314,6 +370,54 @@ export type ModelSubscriptionStoryFilterInput = {
   name?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionStoryFilterInput | null > | null,
   or?: Array< ModelSubscriptionStoryFilterInput | null > | null,
+};
+
+export type CreateGuidanceMutationVariables = {
+  input: CreateGuidanceInput,
+  condition?: ModelGuidanceConditionInput | null,
+};
+
+export type CreateGuidanceMutation = {
+  createGuidance?:  {
+    __typename: "Guidance",
+    id: string,
+    instructions?: string | null,
+    codename?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateGuidanceMutationVariables = {
+  input: UpdateGuidanceInput,
+  condition?: ModelGuidanceConditionInput | null,
+};
+
+export type UpdateGuidanceMutation = {
+  updateGuidance?:  {
+    __typename: "Guidance",
+    id: string,
+    instructions?: string | null,
+    codename?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteGuidanceMutationVariables = {
+  input: DeleteGuidanceInput,
+  condition?: ModelGuidanceConditionInput | null,
+};
+
+export type DeleteGuidanceMutation = {
+  deleteGuidance?:  {
+    __typename: "Guidance",
+    id: string,
+    instructions?: string | null,
+    codename?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
 };
 
 export type CreateCharacterMutationVariables = {
@@ -574,6 +678,42 @@ export type DeleteStoryMutation = {
   } | null,
 };
 
+export type GetGuidanceQueryVariables = {
+  id: string,
+};
+
+export type GetGuidanceQuery = {
+  getGuidance?:  {
+    __typename: "Guidance",
+    id: string,
+    instructions?: string | null,
+    codename?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListGuidancesQueryVariables = {
+  filter?: ModelGuidanceFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListGuidancesQuery = {
+  listGuidances?:  {
+    __typename: "ModelGuidanceConnection",
+    items:  Array< {
+      __typename: "Guidance",
+      id: string,
+      instructions?: string | null,
+      codename?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
 export type GetCharacterQueryVariables = {
   id: string,
 };
@@ -725,6 +865,51 @@ export type ListStoriesQuery = {
       updatedAt: string,
     } | null >,
     nextToken?: string | null,
+  } | null,
+};
+
+export type OnCreateGuidanceSubscriptionVariables = {
+  filter?: ModelSubscriptionGuidanceFilterInput | null,
+};
+
+export type OnCreateGuidanceSubscription = {
+  onCreateGuidance?:  {
+    __typename: "Guidance",
+    id: string,
+    instructions?: string | null,
+    codename?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateGuidanceSubscriptionVariables = {
+  filter?: ModelSubscriptionGuidanceFilterInput | null,
+};
+
+export type OnUpdateGuidanceSubscription = {
+  onUpdateGuidance?:  {
+    __typename: "Guidance",
+    id: string,
+    instructions?: string | null,
+    codename?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteGuidanceSubscriptionVariables = {
+  filter?: ModelSubscriptionGuidanceFilterInput | null,
+};
+
+export type OnDeleteGuidanceSubscription = {
+  onDeleteGuidance?:  {
+    __typename: "Guidance",
+    id: string,
+    instructions?: string | null,
+    codename?: string | null,
+    createdAt: string,
+    updatedAt: string,
   } | null,
 };
 

@@ -2,6 +2,39 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const onCreateGuidance = /* GraphQL */ `
+  subscription OnCreateGuidance($filter: ModelSubscriptionGuidanceFilterInput) {
+    onCreateGuidance(filter: $filter) {
+      id
+      instructions
+      codename
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateGuidance = /* GraphQL */ `
+  subscription OnUpdateGuidance($filter: ModelSubscriptionGuidanceFilterInput) {
+    onUpdateGuidance(filter: $filter) {
+      id
+      instructions
+      codename
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteGuidance = /* GraphQL */ `
+  subscription OnDeleteGuidance($filter: ModelSubscriptionGuidanceFilterInput) {
+    onDeleteGuidance(filter: $filter) {
+      id
+      instructions
+      codename
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateCharacter = /* GraphQL */ `
   subscription OnCreateCharacter(
     $filter: ModelSubscriptionCharacterFilterInput

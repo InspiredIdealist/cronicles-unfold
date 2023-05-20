@@ -7,8 +7,7 @@
 /* eslint-disable */
 import * as React from "react";
 import { getOverrideProps } from "@aws-amplify/ui-react/internal";
-import { Flex, Image, Text } from "@aws-amplify/ui-react";
-import MyIcon from "./MyIcon";
+import { Flex, Image, Text, View } from "@aws-amplify/ui-react";
 export default function StoryCard(props) {
   const {
     name = "Eons and Eons",
@@ -103,38 +102,30 @@ export default function StoryCard(props) {
         ></Text>
       </Flex>
       <Flex
-        gap="16px"
+        gap="8px"
         direction="row"
-        width="unset"
-        height="unset"
+        width="169px"
+        height="31px"
         justifyContent="flex-start"
         alignItems="flex-start"
         shrink="0"
         position="relative"
         padding="0px 0px 0px 0px"
+        backgroundColor="rgba(255,255,255,1)"
         {...getOverrideProps(overrides, "characters")}
       >
-        <MyIcon
+        <View
           width="24px"
           height="24px"
-          display="block"
-          gap="unset"
-          alignItems="unset"
-          justifyContent="unset"
-          overflow="hidden"
-          shrink="0"
-          position="relative"
-          padding="0px 0px 0px 0px"
-          type="group"
           {...getOverrideProps(overrides, "icon")}
-        ></MyIcon>
+        ></View>
         <Text
           fontFamily="Inter"
           fontSize="16px"
           fontWeight="400"
           color="rgba(48,64,80,1)"
           lineHeight="24px"
-          textAlign="center"
+          textAlign="right"
           display="block"
           direction="column"
           justifyContent="unset"
@@ -149,6 +140,28 @@ export default function StoryCard(props) {
           whiteSpace="pre-wrap"
           children={count}
           {...getOverrideProps(overrides, "count")}
+        ></Text>
+        <Text
+          fontFamily="Inter"
+          fontSize="16px"
+          fontWeight="400"
+          color="rgba(0,0,0,1)"
+          lineHeight="24px"
+          textAlign="left"
+          display="block"
+          direction="column"
+          justifyContent="unset"
+          letterSpacing="0.01px"
+          width="86px"
+          height="31px"
+          gap="unset"
+          alignItems="unset"
+          shrink="0"
+          position="relative"
+          padding="0px 0px 0px 0px"
+          whiteSpace="pre-wrap"
+          children="Characters"
+          {...getOverrideProps(overrides, "groupName")}
         ></Text>
       </Flex>
       <Flex

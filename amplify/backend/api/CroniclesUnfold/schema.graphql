@@ -1,9 +1,15 @@
+type Guidance @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  instructions: String
+  codename: String
+}
+
 type Character @model @auth(rules: [{allow: public}]) {
   id: ID!
   name: String
   ownerId: String!
   ownerType: String!
-  story: Story @belongsTo 
+  story: Story @belongsTo
 }
 
 type StoryFragment @model @auth(rules: [{allow: public}]) {
@@ -24,6 +30,7 @@ type Story @model @auth(rules: [{allow: public}]) {
   prevStoryId: String
   createdAt: AWSDateTime!
   lastAddedToAt: AWSDateTime!
-  characters: [Character] @hasMany 
+  characters: [Character] @hasMany
   name: String!
 }
+ 
