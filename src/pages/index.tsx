@@ -1,51 +1,33 @@
 import { CreateStoryMutation, ListStoriesQuery } from '@/graphql/graphql';
 import { listStories } from '@/graphql/queries';
 import { GraphQLQuery, graphqlOperation } from '@aws-amplify/api';
-import { TabItem, Tabs, withAuthenticator } from '@aws-amplify/ui-react';
-import { API, withSSRContext } from 'aws-amplify';
+import { TabItem, Tabs, useAuthenticator, withAuthenticator } from '@aws-amplify/ui-react';
+import { API } from 'aws-amplify';
 import { useEffect, useState } from 'react';
 import { Story } from '@/components/story';
 import NewStory from '@/ui-components/NewStory';
 import { createStory } from '@/graphql/mutations';
 
-export async function getServerSideProps({ req }: any) {
+export function App() {
 
-    const { Auth } = withSSRContext({ req });
-    const { attributes } = await (Auth.currentAuthenticatedUser()
-        .catch(() => ({}))
-    );
-
-    if (!attributes) {
-        return {
-            redirect: {
-                destination: "/login",
-                permanent: false
-            }
-        }
-    }
+    const { user } = useAuthenticator((ctx) => [ctx.user]);
 
     const character = {
-        id: attributes.sub,
-        name: attributes.preferred_username
+        id: user.attributes?.sub,
+        name: user.attributes?.preferred_username
     };
 
-    const stories = await API
-        .graphql<GraphQLQuery<ListStoriesQuery>>(graphqlOperation(listStories))
-        .then(s => s?.data?.listStories?.items)
-
-    return {
-        props: {
-            character,
-            stories
-        }
-    };
-}
-
-
-export function App({ character, stories }: any) {
-
+    const [stories, setStories] = useState<any[]>([]);
     const [story, setActiveStory] = useState<any>();
     const [newStory, setNewStoryMode] = useState<boolean>(false);
+
+    useEffect(() => {
+        API
+            .graphql<GraphQLQuery<ListStoriesQuery>>(graphqlOperation(listStories))
+            .then(s => s?.data?.listStories?.items)
+            .then(stories => setStories(stories as any[]));
+    }, []);
+
 
     const tabs = stories.map((story: any) => (
         <TabItem title={story.name} key={story.id} onClick={() => setActiveStory(story)} />
