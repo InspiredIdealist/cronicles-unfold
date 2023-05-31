@@ -1,4 +1,4 @@
-import { Button, Divider, FieldGroupIcon, Flex, Heading, TextField, View } from '@aws-amplify/ui-react';
+import { Divider, Flex, Heading, View } from '@aws-amplify/ui-react';
 import { API } from 'aws-amplify';
 import { GraphQLQuery, GraphQLSubscription, graphqlOperation } from '@aws-amplify/api';
 import { ListStoryFragmentsQuery, ModelStoryFragmentFilterInput, OnCreateStoryFragmentSubscription } from '@/graphql/graphql';
@@ -6,11 +6,11 @@ import { useEffect, useRef, useState } from 'react';
 import { listStoryFragments } from '@/graphql/queries';
 import { onCreateStoryFragment } from '@/graphql/subscriptions';
 import Head from 'next/head';
+import PromptBox from './prompt-box';
 
 
 export function Story({ story, character }: any) {
     const [fragments, setFragments] = useState<any[]>([]);
-    const [prompt, setPrompt] = useState<string>("");
     const [promptEnabled, isPromptEnabled] = useState<boolean>(true);
 
     useEffect(() => {
@@ -81,6 +81,26 @@ export function Story({ story, character }: any) {
         bottomRef.current?.scrollIntoView()
     }, [fragments]);
 
+    const onPromptSubmit = async (prompt: string) => {
+        isPromptEnabled(false);
+        await fetch("/api/bot", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                nextPrompt: prompt,
+                origin: {
+                    id: character.id,
+                    type: "Character",
+                    name: character.name
+                },
+                storyId: story.id
+            })
+        });
+        isPromptEnabled(true);
+    };
+
     return (
         <>
             <Head>
@@ -104,48 +124,12 @@ export function Story({ story, character }: any) {
                     maxWidth="100%"
                     padding="1rem"
                 >
-                    <form onSubmit={async (e) => {
-                        e.preventDefault();
-                        if (prompt && prompt.trim()) {
-                            isPromptEnabled(false);
-                            await fetch("/api/bot", {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/json"
-                                },
-                                body: JSON.stringify({
-                                    nextPrompt: prompt,
-                                    origin: {
-                                        id: character.id,
-                                        type: "Character",
-                                        name: character.name
-                                    },
-                                    storyId: story.id
-                                })
-                            });
-                            setPrompt("");
-                            isPromptEnabled(true);
-                        }
-                    }}>
-                        <p>wordcount: {fragments.map(f => f.fragment.split(" ").length).reduce((a, b) => a + b, 0)}</p>
-                        <TextField
-                            label=""
-                            value={prompt}
-                            onChange={e => setPrompt(e.target.value)}
-                            type="text"
-                            labelHidden={true}
-                            disabled={!promptEnabled}
-                            placeholder={`so ${character.name}, what happened next?`}
-                            innerStartComponent={
-                                <FieldGroupIcon>
-                                    📇
-                                </FieldGroupIcon>
-                            }
-                            outerEndComponent={
-                                <Button type="submit">Send</Button>
-                            }
-                        />
-                    </form>
+                    <p>wordcount: {fragments.map(f => f.fragment.split(" ").length).reduce((a, b) => a + b, 0)}</p>
+                    <PromptBox
+                        characterName={character.name}
+                        promptEnabled={promptEnabled}
+                        onPromptSubmit={onPromptSubmit}
+                    />
                 </View>
             </Flex >
             <div ref={bottomRef}></div>

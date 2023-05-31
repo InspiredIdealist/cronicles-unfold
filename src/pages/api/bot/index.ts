@@ -3,19 +3,11 @@ import { createStoryFragment } from '@/graphql/mutations';
 import { listStoryFragments } from '@/graphql/queries';
 import { GraphQLQuery } from '@aws-amplify/api';
 import { API, graphqlOperation } from 'aws-amplify';
-import { createHash } from 'crypto';
 import { NextApiRequest, NextApiResponse } from 'next';
-
-interface Segment {
-    prompt: string;
-    completion: string;
-}
 
 const API_KEY = process.env.OPENAI_API_KEY;
 const url = "https://api.openai.com";
 const completionUrl = `${url}/v1/chat/completions`;
-const fineTuneUrl = `${url}/v1/fine-tunes`;
-const fileUrl = `${url}/v1/files`;
 
 const metaPrompt =
     `You are a narrator, telling an ever evolving, never ending story using the prompts given to you by various participants as inspiration.
@@ -110,44 +102,4 @@ export default async function handler(
     res.status(201).end();
 }
 
-async function memorize(storyName: string, lines: Segment[]) {
-    const fileId = await uploadFile(lines.join(""));
-    const fineTunedModelResult = await fetch(fineTuneUrl, {
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer $OPENAI_API_KEY`
-        },
-        body: JSON.stringify({
-            "training_file": fileId,
-            "model": "davinci",
-            "n_epochs": 1,
-            "suffix": storyName
-        })
-    });
 
-    const fineTunedResp = await fineTunedModelResult.json();
-
-    return fineTunedResp.id;
-}
-
-async function uploadFile(content: string) {
-    const hash = createHash("sha256");
-    hash.update(content.substring(0, 1024));
-    const fileName = hash.digest('base64');
-    const formData = new FormData();
-    formData.append("file", fileName);
-    formData.append('data', content);
-    formData.append('purpose', 'fine_tune');
-    const fileResult = await fetch(fileUrl, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${API_KEY}`
-        },
-        body: formData
-    });
-
-    const fileResp = await fileResult.json();
-
-    return fileResp.id;
-}
